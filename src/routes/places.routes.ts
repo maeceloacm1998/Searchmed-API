@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { placeAutoCompleteController } from "../controller/place.controller";
+import { placeAutoCompleteController, placeSearchHospitalController } from "../controller/place.controller";
 
 function placeAutoCompleteRoute(route: Router) {
     /**
@@ -12,9 +12,10 @@ function placeAutoCompleteRoute(route: Router) {
 }
 
 function placesRoute(route: Router) {
-    route
+    route.post('/place/hospital/search', placeSearchHospitalController )
 }
 
 export {
-    placeAutoCompleteRoute
+    placeAutoCompleteRoute,
+    placesRoute
 }

@@ -1,4 +1,4 @@
-import { StatusCode, placeAutoComplete } from "../services/places.service";
+import { StatusCode, placeAutoComplete, placeSearchHospital } from "../services/places.service";
 import { Request, Response } from "express"
 
 async function placeAutoCompleteController(req: Request, res: Response) {
@@ -24,6 +24,14 @@ async function placeAutoCompleteController(req: Request, res: Response) {
     }
 }
 
+async function placeSearchHospitalController(req: Request, res: Response) {
+    const address: string = req.body.address
+
+    const searchHospital = await placeSearchHospital(address)
+
+}
+
 export {
-    placeAutoCompleteController
+    placeAutoCompleteController,
+    placeSearchHospitalController
 };
