@@ -8,7 +8,11 @@ function placeAutoCompleteRoute(route: Router) {
      * @params address: String
      * @returns Array<string>
      */
-    route.get("/place/autocomplete", placeAutoCompleteController)
+    route.post("/place/autocomplete", placeAutoCompleteController)
+}
+
+function placesRoute(route: Router) {
+    route
 }
 
 export {
