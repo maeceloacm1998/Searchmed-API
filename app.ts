@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import { invoke } from "./src/routes/index";
-import mongoose, {ConnectOptions} from "mongoose";
+import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 

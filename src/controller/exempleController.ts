@@ -1,4 +1,4 @@
-import Pet, { IPet } from '../model/exemplo';
+import Pet, { IPet } from '../model/database/exemplo';
 
 interface ICreatePetInput {
   name: IPet['name'];
