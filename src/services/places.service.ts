@@ -58,9 +58,10 @@ async function placeSearchHospital(address: string) {
         const result = await client.placesNearby(request)
 
         // TODO Retorno de cornada, mas ainda nao sei se é metros ou kilometros
-        const dale = result.data.results.map((item) => {
-            const codenate = getPreciseDistance(locationAddress, item.geometry?.location as LatLngLiteral, 1)
-            console.log(codenate)
+        const response = result.data.results.map((item) => {
+            const codenate = Math.round(getPreciseDistance(locationAddress, item.geometry?.location as LatLngLiteral, 1))
+            console.log(locationAddress, item.geometry?.location as LatLngLiteral)
+            console.log(codenate, item.name)
         })
 
         // return {
