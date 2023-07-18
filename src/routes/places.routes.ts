@@ -12,6 +12,12 @@ function placeAutoCompleteRoute(route: Router) {
 }
 
 function placesRoute(route: Router) {
+    /**
+     * Essa chamada serve para retornar todos os hospitais públicos em belo horizonte, mostrando
+     * a distãncia em KM do endereço mandado pelo body até o local.
+     * @params address: String
+     * @returns Array<PlaceSearchHospitalResponse>
+     */
     route.post('/place/hospital/search', placeSearchHospitalController )
 }
 
