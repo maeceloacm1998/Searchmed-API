@@ -29,6 +29,17 @@ async function placeSearchHospitalController(req: Request, res: Response) {
 
     const searchHospital = await placeSearchHospital(address)
 
+    switch (searchHospital.status) {
+        case StatusCode.Success: {
+            res.status(parseInt(StatusCode.Success)).send(searchHospital)
+            break;
+        }
+
+        case StatusCode.notFound: {
+            res.status(parseInt(StatusCode.notFound)).send([])
+            break;
+        }
+    }
 }
 
 export {

@@ -1,6 +1,8 @@
-import { Client, Language, LatLngLiteral, PlaceAutocompleteRequest, PlaceAutocompleteResult, PlaceType1, PlacesNearbyRequest, TextSearchRequest } from "@googlemaps/google-maps-services-js";
-import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
+import { Client, Language, LatLngLiteral, PlaceAutocompleteRequest, PlaceAutocompleteResult, PlaceType1, TextSearchRequest } from "@googlemaps/google-maps-services-js";
 import { getPreciseDistance } from 'geolib';
+
+import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
+import { PlaceSearchHospitalResponse } from "../model/types/PlaceSearchHospitalResponse";
 import enviroments from "../enviroments";
 
 export interface PlaceState<T> {
@@ -39,35 +41,31 @@ async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutoc
     }
 }
 
-async function placeSearchHospital(address: string) {
-
+async function placeSearchHospital(address: string) : Promise<PlaceState<PlaceSearchHospitalResponse[]>> {
+    const searchName = "hopistal publico em belo horizonte"
     try {
-        const client: Client = new Client()
-        const place = await findPlace(address)
-        const locationAddress = place.result.geometry?.location as LatLngLiteral
-
-        const request: PlacesNearbyRequest = {
-            params: {
-                location: locationAddress,
-                keyword: "(emergency) AND ((medical centre) OR hospital) AND (24 hours)",
-                type: "hospital",
-                radius: 15000,
-                key: enviroments.PLACE_API_KEY
+        const {result} = await findPlace(address)
+        const hospitalList = await findPlace(searchName)
+        const addressUser = result.placeList[0].geometry?.location as LatLngLiteral
+        console.log(hospitalList, addressUser)
+        const newPlaceResult: PlaceSearchHospitalResponse[] = hospitalList.result.placeList.map((item, index) => {
+            return {
+                id: index.toString(),
+                address: item.formatted_address,
+                geometry: item.geometry,
+                name: item.name,
+                opening_hours: item.opening_hours,
+                place_id: item.place_id,
+                rating: item.rating,
+                types: item.types,
+                distance: Math.round(getPreciseDistance(addressUser, item.geometry?.location as LatLngLiteral, 1))
             }
-        }
-        const result = await client.placesNearby(request)
-
-        // TODO Retorno de cornada, mas ainda nao sei se é metros ou kilometros
-        const response = result.data.results.map((item) => {
-            const codenate = Math.round(getPreciseDistance(locationAddress, item.geometry?.location as LatLngLiteral, 1))
-            console.log(locationAddress, item.geometry?.location as LatLngLiteral)
-            console.log(codenate, item.name)
         })
 
-        // return {
-        //     status: StatusCode.Success,
-        //     result: result.data.predictions
-        // }
+        return {
+            status: StatusCode.Success,
+            result: newPlaceResult
+        }
     } catch (e) {
         return {
             status: StatusCode.notFound,
@@ -88,15 +86,13 @@ async function findPlace(address: string, type?: PlaceType1 | undefined): Promis
             }
         }
         const { data } = await client.textSearch(request)
-        const response: FindPlaceResponse = {
-            address: address,
-            geometry: data.results[0].geometry,
-            placeId: data.results[0].place_id
-        }
 
         return {
             status: StatusCode.Success,
-            result: response
+            result: {
+                nextPageToken: data.next_page_token,
+                placeList: data.results
+            }
         }
     } catch (error) {
         if (error instanceof Error) throw new Error(error.message)

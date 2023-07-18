@@ -1,7 +1,6 @@
-import { AddressGeometry } from "@googlemaps/google-maps-services-js";
+import { PlaceData } from "@googlemaps/google-maps-services-js";
 
 export interface FindPlaceResponse {
-    placeId: string | undefined,
-    geometry: AddressGeometry | undefined,
-    address: string
+    nextPageToken: string | undefined,
+    placeList: Partial<PlaceData>[]
 }
