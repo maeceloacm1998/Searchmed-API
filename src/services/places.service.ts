@@ -2,7 +2,7 @@ import { Client, Language, LatLngLiteral, PlaceAutocompleteRequest, PlaceAutocom
 import { getPreciseDistance } from 'geolib';
 
 import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
-import { PlaceSearchHospitalResponse } from "../model/types/PlaceSearchHospitalResponse";
+import { PlaceSearchHospitalResponse, SearchHospitalModel } from "../model/types/PlaceSearchHospitalResponse";
 import enviroments from "../enviroments";
 
 export interface PlaceState<T> {
@@ -41,14 +41,13 @@ async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutoc
     }
 }
 
-async function placeSearchHospital(address: string) : Promise<PlaceState<PlaceSearchHospitalResponse[]>> {
+async function placeSearchHospital(address: string, pageToken: string): Promise<PlaceState<PlaceSearchHospitalResponse>> {
     const searchName = "hopistal publico em belo horizonte"
     try {
-        const {result} = await findPlace(address)
-        const hospitalList = await findPlace(searchName)
+        const { result } = await findPlace(address)
+        const hospitalList = await findPlace(searchName, undefined, pageToken)
         const addressUser = result.placeList[0].geometry?.location as LatLngLiteral
-        console.log(hospitalList, addressUser)
-        const newPlaceResult: PlaceSearchHospitalResponse[] = hospitalList.result.placeList.map((item, index) => {
+        const newPlaceResult: SearchHospitalModel[] = hospitalList.result.placeList.map((item, index) => {
             return {
                 id: index.toString(),
                 address: item.formatted_address,
@@ -64,25 +63,30 @@ async function placeSearchHospital(address: string) : Promise<PlaceState<PlaceSe
 
         return {
             status: StatusCode.Success,
-            result: newPlaceResult
+            result: {
+                nextPageToken: hospitalList.result.nextPageToken,
+                hospitalList: newPlaceResult
+            }
         }
     } catch (e) {
         return {
             status: StatusCode.notFound,
-            result: []
+            result: {} as PlaceSearchHospitalResponse
         }
     }
 }
 
-async function findPlace(address: string, type?: PlaceType1 | undefined): Promise<PlaceState<FindPlaceResponse>> {
+async function findPlace(address: string, type?: PlaceType1 | undefined, pagetoken?: string): Promise<PlaceState<FindPlaceResponse>> {
     try {
         const client: Client = new Client()
+        console.log(pagetoken)
         const request: TextSearchRequest = {
             params: {
                 query: address,
                 language: Language.pt_BR,
                 type: type,
-                key: enviroments.PLACE_API_KEY
+                key: enviroments.PLACE_API_KEY,
+                pagetoken: pagetoken
             }
         }
         const { data } = await client.textSearch(request)
