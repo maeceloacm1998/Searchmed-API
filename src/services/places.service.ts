@@ -1,19 +1,13 @@
-import { Client, Language, LatLngLiteral, PlaceAutocompleteRequest, PlaceAutocompleteResult, PlaceType1, TextSearchRequest } from "@googlemaps/google-maps-services-js";
+import { Client, Language, LatLngLiteral, PlaceAutocompleteRequest, PlaceAutocompleteResult, PlaceData, PlaceDetailsRequest, PlaceType1, TextSearchRequest } from "@googlemaps/google-maps-services-js";
 import { getPreciseDistance } from 'geolib';
 
 import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
 import { PlaceSearchHospitalResponse, SearchHospitalModel } from "../model/types/PlaceSearchHospitalResponse";
+import { HospitalDestailsResponse } from "../model/types/HospitalDetailsResponse";
+import { PlaceState } from "../model/types/PlaceState";
+import { StatusCode } from "../model/types/StatusCode";
+
 import enviroments from "../enviroments";
-
-export interface PlaceState<T> {
-    status: string,
-    result: T
-}
-
-export enum StatusCode {
-    Success = "200",
-    notFound = "404"
-}
 
 
 async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutocompleteResult[]>> {
@@ -79,7 +73,6 @@ async function placeSearchHospital(address: string, pageToken: string): Promise<
 async function findPlace(address: string, type?: PlaceType1 | undefined, pagetoken?: string): Promise<PlaceState<FindPlaceResponse>> {
     try {
         const client: Client = new Client()
-        console.log(pagetoken)
         const request: TextSearchRequest = {
             params: {
                 query: address,
@@ -107,7 +100,51 @@ async function findPlace(address: string, type?: PlaceType1 | undefined, pagetok
     }
 }
 
+async function placeHospitalDetails(placeId: string): Promise<PlaceState<HospitalDestailsResponse>> {
+    try {
+        const client: Client = new Client()
+        const request: PlaceDetailsRequest = {
+            params: {
+                place_id: placeId,
+                language: Language.pt_BR,
+                key: enviroments.PLACE_API_KEY
+            }
+        }
+        const { data } = await client.placeDetails(request)
+
+        return {
+            status: StatusCode.Success,
+            result: converterToHospitaDetailsResponse(data.result)
+        }
+    } catch (error) {
+        if (error instanceof Error) throw new Error(error.message)
+        return {
+            status: StatusCode.notFound,
+            result: {} as HospitalDestailsResponse
+        }
+    }
+}
+
+function converterToHospitaDetailsResponse(hospitalDetail: Partial<PlaceData>): HospitalDestailsResponse {
+    return {
+        adrAddress: hospitalDetail.adr_address,
+        currentOpeningHours: hospitalDetail.opening_hours,
+        formatted_address: hospitalDetail.formatted_address,
+        formatted_phone_number: hospitalDetail.formatted_phone_number,
+        geometry: hospitalDetail.geometry,
+        international_phone_number: hospitalDetail.international_phone_number,
+        name: hospitalDetail.name,
+        place_id: hospitalDetail.place_id,
+        rating: hospitalDetail.rating,
+        reviews: hospitalDetail.reviews,
+        types: hospitalDetail.types,
+        url: hospitalDetail.url,
+        vicinity: hospitalDetail.vicinity
+    }
+}
+
 export {
     placeAutoComplete,
-    placeSearchHospital
+    placeSearchHospital,
+    placeHospitalDetails
 }

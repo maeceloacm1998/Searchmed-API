@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { placeAutoCompleteController, placeSearchHospitalController } from "../controller/place.controller";
+import { placeAutoCompleteController, placeSearchHospitalController, placeSearchHospitalDetailsController } from "../controller/place.controller";
 
 function placeAutoCompleteRoute(route: Router) {
     /**
@@ -19,6 +19,12 @@ function placesRoute(route: Router) {
      * @returns Array<PlaceSearchHospitalResponse>
      */
     route.post('/place/hospital/search?:pageToken', placeSearchHospitalController )
+
+    /**
+     * Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId
+     * @params placeId: String
+     */
+    route.post('/place/hospital/details?:placeid', placeSearchHospitalDetailsController)
 }
 
 export {
