@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "nodemon app.ts"
   },
+  "engines": {
+    "node": ">=14 <15"
+  },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.33",
     "body-parser": "^1.20.2",
