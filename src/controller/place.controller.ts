@@ -27,9 +27,8 @@ async function placeAutoCompleteController(req: Request, res: Response) {
 
 async function placeSearchHospitalController(req: Request, res: Response) {
     const address: string = req.body.address
-    const pageToken = req.query.pageToken as string
 
-    const searchHospital = await placeSearchHospital(address, pageToken)
+    const searchHospital = await placeSearchHospital(address)
 
     switch (searchHospital.status) {
         case StatusCode.Success: {

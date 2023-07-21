@@ -1,14 +1,14 @@
 import { Client, Language, LatLngLiteral, PlaceAutocompleteRequest, PlaceAutocompleteResult, PlaceData, PlaceDetailsRequest, PlaceType1, TextSearchRequest } from "@googlemaps/google-maps-services-js";
 import { getPreciseDistance } from 'geolib';
 
+import { HospitalDestailsResponse, converterToHospitaDetailsResponse } from "../model/types/HospitalDetailsResponse";
 import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
-import { PlaceSearchHospitalResponse, SearchHospitalModel } from "../model/types/PlaceSearchHospitalResponse";
-import { HospitalDestailsResponse } from "../model/types/HospitalDetailsResponse";
+import { SearchHospitalModel } from "../model/types/PlaceSearchHospitalResponse";
 import { PlaceState } from "../model/types/PlaceState";
 import { StatusCode } from "../model/types/StatusCode";
+import hospitalSchema from "../model/schema/HospitalSchema";
 
 import enviroments from "../enviroments";
-
 
 async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutocompleteResult[]>> {
     try {
@@ -35,54 +35,61 @@ async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutoc
     }
 }
 
-async function placeSearchHospital(address: string, pageToken: string): Promise<PlaceState<PlaceSearchHospitalResponse>> {
-    const searchName = "hopistal publico em belo horizonte"
+async function placeSearchHospital(address: string): Promise<PlaceState<SearchHospitalModel[]>> {
     try {
         const { result } = await findPlace(address)
-        const hospitalList = await findPlace(searchName, undefined, pageToken)
+        const hospitalList = await hospitalSchema.find().exec()
         const addressUser = result.placeList[0].geometry?.location as LatLngLiteral
-        const newPlaceResult: SearchHospitalModel[] = hospitalList.result.placeList.map((item, index) => {
-            return {
-                id: index.toString(),
-                address: item.formatted_address,
-                geometry: item.geometry,
-                name: item.name,
-                opening_hours: item.opening_hours,
-                place_id: item.place_id,
-                rating: item.rating,
-                types: item.types,
-                distance: Math.round(getPreciseDistance(addressUser, item.geometry?.location as LatLngLiteral, 1))
-            }
-        })
 
+        const hospitalFilterPerDistance: SearchHospitalModel[] = filterHospitalPerDistance(hospitalList, addressUser)
         return {
             status: StatusCode.Success,
-            result: {
-                nextPageToken: hospitalList.result.nextPageToken,
-                hospitalList: newPlaceResult
-            }
+            result: hospitalFilterPerDistance
         }
     } catch (e) {
         return {
             status: StatusCode.notFound,
-            result: {} as PlaceSearchHospitalResponse
+            result: [] as SearchHospitalModel[]
         }
     }
+}
+
+function filterHospitalPerDistance(hospitalList: SearchHospitalModel[], addressUser: LatLngLiteral): SearchHospitalModel[] {
+    return hospitalList.map((item) => {
+        let hospital = item
+        item.distance = Math.round(getPreciseDistance(addressUser, item.geometry?.location as LatLngLiteral, 1))
+        return hospital
+    }).sort(function compare(a, b) {
+        if (a.distance!! < b.distance!!) return -1;
+        if (a.distance!! > b.distance!!) return 1;
+        return 0;
+    })
 }
 
 async function findPlace(address: string, type?: PlaceType1 | undefined, pagetoken?: string): Promise<PlaceState<FindPlaceResponse>> {
     try {
         const client: Client = new Client()
-        const request: TextSearchRequest = {
-            params: {
-                query: address,
-                language: Language.pt_BR,
-                type: type,
-                key: enviroments.PLACE_API_KEY,
-                pagetoken: pagetoken
+        let request = {}
+
+        if (pagetoken) {
+            request = {
+                params: {
+                    key: enviroments.PLACE_API_KEY,
+                    pagetoken: pagetoken
+                }
+            }
+        } else {
+            request = {
+                params: {
+                    query: address,
+                    language: Language.pt_BR,
+                    type: type,
+                    key: enviroments.PLACE_API_KEY,
+                    pagetoken: pagetoken
+                }
             }
         }
-        const { data } = await client.textSearch(request)
+        const { data } = await client.textSearch(request as TextSearchRequest)
 
         return {
             status: StatusCode.Success,
@@ -122,24 +129,6 @@ async function placeHospitalDetails(placeId: string): Promise<PlaceState<Hospita
             status: StatusCode.notFound,
             result: {} as HospitalDestailsResponse
         }
-    }
-}
-
-function converterToHospitaDetailsResponse(hospitalDetail: Partial<PlaceData>): HospitalDestailsResponse {
-    return {
-        adrAddress: hospitalDetail.adr_address,
-        currentOpeningHours: hospitalDetail.opening_hours,
-        formatted_address: hospitalDetail.formatted_address,
-        formatted_phone_number: hospitalDetail.formatted_phone_number,
-        geometry: hospitalDetail.geometry,
-        international_phone_number: hospitalDetail.international_phone_number,
-        name: hospitalDetail.name,
-        place_id: hospitalDetail.place_id,
-        rating: hospitalDetail.rating,
-        reviews: hospitalDetail.reviews,
-        types: hospitalDetail.types,
-        url: hospitalDetail.url,
-        vicinity: hospitalDetail.vicinity
     }
 }
 
