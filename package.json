@@ -7,7 +7,7 @@
     "dev": "nodemon app.ts"
   },
   "engines": {
-    "node": ">=14 <18"
+    "node": ">=14 <18.17"
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.33",
@@ -20,6 +20,7 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.4",
     "nodemon": "^3.0.1",
+    "redis": "^4.6.7",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {

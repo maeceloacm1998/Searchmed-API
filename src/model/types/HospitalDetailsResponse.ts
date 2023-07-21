@@ -1,4 +1,4 @@
-import { AddressGeometry, AddressType, OpeningHours, PlaceReview } from "@googlemaps/google-maps-services-js"
+import { AddressGeometry, AddressType, OpeningHours, PlaceData, PlaceReview } from "@googlemaps/google-maps-services-js"
 
 export interface HospitalDestailsResponse {
       adrAddress: string | undefined,
@@ -15,3 +15,21 @@ export interface HospitalDestailsResponse {
       url: string | undefined,
       vicinity: string | undefined,
 }
+
+export function converterToHospitaDetailsResponse(hospitalDetail: Partial<PlaceData>): HospitalDestailsResponse {
+      return {
+          adrAddress: hospitalDetail.adr_address,
+          currentOpeningHours: hospitalDetail.opening_hours,
+          formatted_address: hospitalDetail.formatted_address,
+          formatted_phone_number: hospitalDetail.formatted_phone_number,
+          geometry: hospitalDetail.geometry,
+          international_phone_number: hospitalDetail.international_phone_number,
+          name: hospitalDetail.name,
+          place_id: hospitalDetail.place_id,
+          rating: hospitalDetail.rating,
+          reviews: hospitalDetail.reviews,
+          types: hospitalDetail.types,
+          url: hospitalDetail.url,
+          vicinity: hospitalDetail.vicinity
+      }
+  }

@@ -1,12 +1,6 @@
 import { AddressGeometry, AddressType, OpeningHours } from "@googlemaps/google-maps-services-js";
 
-export interface PlaceSearchHospitalResponse {
-    nextPageToken: string | undefined,
-    hospitalList: SearchHospitalModel[]
-}
-
 export interface SearchHospitalModel {
-    id: string,
     address: string | undefined,
     geometry: AddressGeometry | undefined,
     name: string | undefined,
@@ -15,4 +9,5 @@ export interface SearchHospitalModel {
     rating: number | undefined,
     distance: number | undefined,
     types: AddressType[] | undefined
+    isEmergencyHospital: boolean | undefined
 }
