@@ -8,8 +8,6 @@ import { PlaceState } from "../model/types/PlaceState";
 import { StatusCode } from "../model/types/StatusCode";
 import hospitalSchema from "../model/schema/HospitalSchema";
 
-import enviroments from "../enviroments";
-
 async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutocompleteResult[]>> {
     try {
         const client: Client = new Client()
@@ -18,7 +16,7 @@ async function placeAutoComplete(address: string): Promise<PlaceState<PlaceAutoc
                 input: address,
                 language: "pt_BR",
                 components: ["country:br"],
-                key: enviroments.PLACE_API_KEY
+                key: process.env.PLACE_API_KEY as string
             }
         }
         const result = await client.placeAutocomplete(request)
@@ -74,7 +72,7 @@ async function findPlace(address: string, type?: PlaceType1 | undefined, pagetok
         if (pagetoken) {
             request = {
                 params: {
-                    key: enviroments.PLACE_API_KEY,
+                    key: process.env.PLACE_API_KEY,
                     pagetoken: pagetoken
                 }
             }
@@ -84,7 +82,7 @@ async function findPlace(address: string, type?: PlaceType1 | undefined, pagetok
                     query: address,
                     language: Language.pt_BR,
                     type: type,
-                    key: enviroments.PLACE_API_KEY,
+                    key: process.env.PLACE_API_KEY,
                     pagetoken: pagetoken
                 }
             }
@@ -114,7 +112,7 @@ async function placeHospitalDetails(placeId: string): Promise<PlaceState<Hospita
             params: {
                 place_id: placeId,
                 language: Language.pt_BR,
-                key: enviroments.PLACE_API_KEY
+                key: process.env.PLACE_API_KEY as string
             }
         }
         const { data } = await client.placeDetails(request)
