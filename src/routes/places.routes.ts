@@ -18,7 +18,7 @@ function placesRoute(route: Router) {
      * @params address: String
      * @returns Array<PlaceSearchHospitalResponse>
      */
-    route.post('/place/hospital/search?:pageToken', placeSearchHospitalController )
+    route.post('/place/hospital/search', placeSearchHospitalController )
 
     /**
      * Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId
