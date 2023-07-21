@@ -13,9 +13,7 @@ function middlewares() {
     app.use(express.json());
 }
 
-function connectMongDb() {
-    // mongoose.connect('mongodb+srv://maeceloacm1998:Vayne123@cluster0.k8a87tc.mongodb.net/');
-    
+function connectMongDb() {    
     mongoose
         .connect(process.env.MONGODB_URI as string, {
             dbName: process.env.DB_NAME,

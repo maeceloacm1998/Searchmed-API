@@ -64,30 +64,19 @@ function filterHospitalPerDistance(hospitalList: SearchHospitalModel[], addressU
     })
 }
 
-async function findPlace(address: string, type?: PlaceType1 | undefined, pagetoken?: string): Promise<PlaceState<FindPlaceResponse>> {
+async function findPlace(address: string, type?: PlaceType1 | undefined): Promise<PlaceState<FindPlaceResponse>> {
     try {
         const client: Client = new Client()
-        let request = {}
-
-        if (pagetoken) {
-            request = {
-                params: {
-                    key: process.env.PLACE_API_KEY,
-                    pagetoken: pagetoken
-                }
-            }
-        } else {
-            request = {
-                params: {
-                    query: address,
-                    language: Language.pt_BR,
-                    type: type,
-                    key: process.env.PLACE_API_KEY,
-                    pagetoken: pagetoken
-                }
+        let request: TextSearchRequest = {
+            params: {
+                query: address,
+                language: Language.pt_BR,
+                type: type,
+                key: process.env.PLACE_API_KEY as string
             }
         }
-        const { data } = await client.textSearch(request as TextSearchRequest)
+
+        const { data } = await client.textSearch(request)
 
         return {
             status: StatusCode.Success,
