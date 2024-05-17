@@ -1,0 +1,10 @@
+# Este é um exemplo de arquivo CODEOWNERS.
+
+# Estas pessoas serão as proprietárias padrão para tudo no repositório.
+* @maeceloacm1998 @IgorAtilar
+
+# Estas pessoas serão as proprietárias de todos os arquivos na pasta docs/.
+/docs/ @maeceloacm1998 @IgorAtilar
+
+# Estas pessoas serão as proprietárias de todos os arquivos na pasta src/ e qualquer subpasta.
+/src/ @maeceloacm1998 @IgorAtilar
