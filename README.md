@@ -1,10 +1,65 @@
 # Searchmed-API
 > Serviço para aplicativo de busca por hospitais
 
-Essa serviço foi criado para catalogar os hospitais público em Belo Horizonte, fornecidos pela api PLACE API do Google Maps. O objetivo é através do endereço da pessoa, enviado
-pelo body das requisições, retornar uma lista de hospitais ordenados pela distância onde a pessoa está.
+## Descrição
+Essa serviço foi criado para catalogar os hospitais público em Belo Horizonte, fornecidos pela api PLACE API do Google Maps. O objetivo é através do endereço da pessoa, enviado pelo body das requisições, retornar uma lista de hospitais ordenados pela distância onde a pessoa está.
 
-## Endpoints
+## Índice
+
+- [Descrição](#descrição)
+- [Instruções de Instalação e Configuração](#instruções-de-instalação-e-configuração)
+- [Endpoints da API](#endpoints-da-api)
+  - [GET - Pegar latitude e longitude a partir do endereço do usuário](#get---pegar-latitude-e-longitude-a-partir-do-endereço-do-usuário)
+
+## Instruções de Instalação e Configuração
+
+1. Clone este repositório.
+2. Rode `npm install` ou `yarn install` para instalar as dependências.
+3. Crie um arquivo `.env` e configure quaisquer variáveis de ambiente necessárias.
+4. Rode `npm start` ou `yarn start` para iniciar o servidor.
+
+## Endpoints da API
+
+### GET - Pegar latitude e longitude a partir do endereço do usuário
+
+Esse endpoint serve para pegar latitude e longitude de todos os hospitais no raio de 10km do endereço do usuário.
+
+**Requisição:**
+
+```bash
+curl --location 'http://localhost:3000/place/hospitals/maps?latitude=-19.8374075&longitude=-43.9836488' \
+--data ''
+```
+
+**Resposta:**
+```json
+// SUCESSO
+[
+   "status": 200,
+   "result": {
+     "latitude": -19.9198,
+     "longitude": -43.9386
+   }
+]
+
+// SUCESSO - Hospitais não encontrados
+[
+   "status": 200,
+   "result": {
+     "latitude": -19.9198,
+     "longitude": -43.9386
+   }
+]
+
+// ERROR - Endereço do usuário não foi passado 
+[
+   "status": 400,
+   "result": "Latitude and Longitude must be valid numbers."
+]
+```
+
+
+
 ### Autocomplete de endereço 
 - POST ```/place/autocomplete```
   
@@ -136,12 +191,3 @@ curl --request POST \
 	"address": "Rua hildebrando de Oliveira, 235"
 }'
 ```
-
-- Criação de contatos - POST: http://localhost:3333/createcontact
-  .Usado para criar um contato novo contendo **NOME**, **EMAIL** e **TELEFONE** de cada contato.
-  
-- Lista de contatos - PUT: http://localhost:3333/update/:id_contatos'
-  .Usado para atualizar o contato que você desejar. Para isso você vai inserir o _id que cada contato tem e inserir na URL depois do `update/`.  
-  
-- Lista de contatos - DELETE: http://localhost:3333/delete/:id_contato
-  .Usado para deletar um contato da lista. Para isso você vai inserir o _id que cada contato tem e inserir na URL depois do `delete/`.
