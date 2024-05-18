@@ -10,6 +10,7 @@ Essa serviço foi criado para catalogar os hospitais público em Belo Horizonte,
 - [Instruções de Instalação e Configuração](#instruções-de-instalação-e-configuração)
 - [Endpoints da API](#endpoints-da-api)
   - [GET - Pegar latitude e longitude a partir do endereço do usuário](#get---pegar-latitude-e-longitude-a-partir-do-endereço-do-usuário)
+  - [GET - Lista de busca de hospitais pelo nome](#get---lista-de-busca-de-hospitais-pelo-nome)
 
 ## Instruções de Instalação e Configuração
 
@@ -35,7 +36,7 @@ curl --location 'http://localhost:3000/place/hospitals/maps?latitude=-19.8374075
 ```json
 // SUCESSO
 [
-   "status": 200,
+   "status": "200",
    "result": {
      "latitude": -19.9198,
      "longitude": -43.9386
@@ -44,7 +45,7 @@ curl --location 'http://localhost:3000/place/hospitals/maps?latitude=-19.8374075
 
 // SUCESSO - Hospitais não encontrados
 [
-   "status": 200,
+   "status": "200",
    "result": {
      "latitude": -19.9198,
      "longitude": -43.9386
@@ -53,12 +54,58 @@ curl --location 'http://localhost:3000/place/hospitals/maps?latitude=-19.8374075
 
 // ERROR - Endereço do usuário não foi passado 
 [
-   "status": 400,
+   "status": "404",
    "result": "Latitude and Longitude must be valid numbers."
 ]
 ```
 
+### GET - Lista de busca de hospitais pelo nome
 
+Esse endpoint serve para pegar a lista de hospitais de acordo com o nome digitado pelo usuário. Vale
+ressaltar que esses hospitais são ordenados baseados na localidade do usuário.
+
+**Requisição:**
+
+```bash
+curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.8374075&longitude=-43.9836488&hospitalName=Hosp&page=3&limite=10&=' \
+--header 'Content-Type: application/json' \
+--data ''
+```
+
+**Resposta:**
+```json
+// SUCESSO - 1 Página
+{
+    "state": "200",
+    "result": [
+        { 10 hospitais }
+    ],
+    "nextpage": "http://localhost:3000?page=2&limit=10",
+    "prevPage": null
+}
+
+// SUCESSO - Próximas páginas
+{
+    "state": "200",
+    "result": [
+        { 10 hospitais }
+    ],
+    "nextpage": "http://localhost:3000?page=4&limit=10",
+    "prevPage": "http://localhost:3000?page=2&limit=10"
+}
+
+// ERROR - Nome do hospital não fornecido
+{
+    "state": "404",
+    "message": "Hospital name must be valid."
+}
+
+// ERROR - Endereço do usuário não foi passado 
+{
+   "status": "404",
+   "result": "Latitude and Longitude must be valid numbers."
+}
+```
 
 ### Autocomplete de endereço 
 - POST ```/place/autocomplete```
