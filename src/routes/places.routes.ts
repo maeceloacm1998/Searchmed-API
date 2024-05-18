@@ -91,15 +91,31 @@ function placesRoute(route: Router) {
   );
 
   /**
-   * Essa chamada serve para retornar todos os hospitais públicos em belo horizonte, mostrando
-   * a distãncia em KM do endereço mandado pelo body até o local.
-   * @params address: String
-   * @returns Array<HospitalsModel>
+   * Essa chamada serve para retornar uma lista de hospitais de acordo com o nome passado por parametro.
+   * @params hospitalName: String
+   * @params latitude: Number
+   * @params longitude: Number
+   * @params range: Number
+   * @params page: Number
+   * @params limit: Number
+   *
+   * @returns Array<HospitalModel>
+   * @throws NotFound
+   *
+   * Exemplo de uso:
+   * /place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=1&limit=10
+   *
+   * Exemplo de resposta:
+   * {
+   * "state": 200,
+   * "result": [
+   * { 10 hospitais },
+   * ],
+   * "nextpage": "http://localhost:3000/place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=2&limit=10",
+   * "prevPage": "http://localhost:3000/place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=1&limit=10"
+   * }
    */
-  route.post(
-    "/place/hospital/search?:pageToken",
-    placeSearchHospitalController
-  );
+  route.get("/place/hospital/search", placeSearchHospitalController);
 
   /**
    * Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId
