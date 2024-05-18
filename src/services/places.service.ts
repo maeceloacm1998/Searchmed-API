@@ -15,7 +15,7 @@ import {
   converterToHospitaDetailsResponse,
 } from "../model/types/HospitalDetailsResponse";
 import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
-import { SearchHospitalModel } from "../model/types/response/PlaceSearchHospitalResponse";
+import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
 import { PlaceState } from "../model/types/PlaceState";
 import { StatusCode } from "../model/types/StatusCode";
 import hospitalSchema from "../model/schema/HospitalSchema";
@@ -49,12 +49,15 @@ async function placeAutoComplete(
 
 /**
  * Retorna todos os hospitais públicos em Belo Horizonte.
- * @returns Array<SearchHospitalModel>
+ * @returns Array<HospitalDTOModel>
  * @throws NotFound
  */
-async function getHospitals(): Promise<PlaceState<SearchHospitalModel[]>> {
+async function getHospitals(): Promise<PlaceState<HospitalDTOModel[]>> {
   try {
-    const hospitalList = await hospitalSchema.find().exec();
+    const hospitalList: Array<HospitalDTOModel> = await hospitalSchema
+      .find()
+      .exec();
+
     return {
       status: StatusCode.Success,
       result: hospitalList,
@@ -62,20 +65,20 @@ async function getHospitals(): Promise<PlaceState<SearchHospitalModel[]>> {
   } catch (e) {
     return {
       status: StatusCode.notFound,
-      result: [] as SearchHospitalModel[],
+      result: [] as HospitalDTOModel[],
     };
   }
 }
 
 async function placeSearchHospital(
   address: string
-): Promise<PlaceState<SearchHospitalModel[]>> {
+): Promise<PlaceState<HospitalDTOModel[]>> {
   try {
     const { result } = await findPlace(address);
     const hospitalList = await hospitalSchema.find().exec();
     const addressUser = result.placeList[0].geometry?.location as LatLngLiteral;
 
-    const hospitalFilterPerDistance: SearchHospitalModel[] =
+    const hospitalFilterPerDistance: HospitalDTOModel[] =
       filterHospitalPerDistance(hospitalList, addressUser);
     return {
       status: StatusCode.Success,
@@ -84,7 +87,7 @@ async function placeSearchHospital(
   } catch (e) {
     return {
       status: StatusCode.notFound,
-      result: [] as SearchHospitalModel[],
+      result: [] as HospitalDTOModel[],
     };
   }
 }
@@ -94,18 +97,18 @@ async function placeSearchHospital(
  * @param hospitalList lista de hospitais
  * @param addressUser endereço do usuário
  * @param range alcance para buscar hospitais
- * @returns Array<SearchHospitalModel>
+ * @returns Array<HospitalDTOModel> lista de hospitais filtrados por distância
  * @default 10000
  */
 function filterHospitalPerDistance(
-  hospitalList: SearchHospitalModel[],
+  hospitalList: HospitalDTOModel[],
   addressUser: LatLngLiteral,
   range: number = 10000
-): SearchHospitalModel[] {
+): HospitalDTOModel[] {
   return hospitalList
     .map((item) => {
       let hospital = item;
-      item.distance = Math.round(
+      hospital.distance = Math.round(
         getPreciseDistance(
           addressUser,
           item.geometry?.location as LatLngLiteral,
