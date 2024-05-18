@@ -3,8 +3,9 @@ import {
   placeAutoCompleteController,
   placeSearchHospitalController,
   placeSearchHospitalDetailsController,
+  placeSearchHospitalToEmergencyController,
   placeSearchHospitalsMapsController,
-} from "../controller/place.controller";
+} from "../controller/index";
 
 function placeAutoCompleteRoute(route: Router) {
   /**
@@ -20,9 +21,11 @@ function placesRoute(route: Router) {
   /**
    * Controlador para a rota /place/hospitals/maps.
    * Espera os seguintes parâmetros de consulta:
-   * - latitude: a latitude do usuário
-   * - longitude: a longitude do usuário
-   * - range: o alcance para buscar hospitais
+   *
+   * @param latitude: a latitude do usuário
+   * @param longitude: a longitude do usuário
+   * @param range: o alcance para buscar hospitais
+   *
    * @returns Array<PlaceSearchHospitalsMap>
    * @throws NotFound
    *
@@ -45,10 +48,53 @@ function placesRoute(route: Router) {
   route.get("/place/hospitals/maps", placeSearchHospitalsMapsController);
 
   /**
+   * Essa chamada serve para retornar o hospital público de emergência mais próximo
+   * do endereço mandado pelo body até o local.
+   *
+   * @param latitude: a latitude do usuário
+   * @param longitude: a longitude do usuário
+   * @param range: o alcance para buscar hospitais
+   *
+   * @returns HospitalsModel
+   *
+   * Exemplo de uso:
+   * /place/hospitals/emergency?latitude=-19.9198&longitude=-43.9386&range=10000
+   *
+   * Exemplo de resposta:
+   * {
+   * "place_id": "ChIJz7JQJ5Zm0JQR3Jb1J6G5Q1A",
+   * "address": "R. dos Otoni, 909 - Santa Efigênia, Belo Horizonte - MG, 30150-270, Brasil",
+   * "geometry": {
+   *  "latitude": -19.9198,
+   * "longitude": -43.9386
+   * },
+   * "name": "Hospital da Baleia",
+   * "rating": 4.3,
+   * "distance": 0.5,
+   * "isEmergencyHospital": true,
+   * "phoneNumber": "(31) 3489-1600",
+   * "reviews": [
+   * {
+   * "author": "Rafael",
+   * "authorUrl": "https://www.google.com/maps/contrib/107579013682013013000/reviews",
+   * "photo": "https://lh3.googleusercontent.com/a-/AOh14Gj
+   * "rating": 5,
+   * "comment": "Ótimo atendimento",
+   * "date": "2021-08-10T00:00:00.000Z"
+   * }
+   * ]
+   * }
+   */
+  route.get(
+    "/place/hospitals/emergency",
+    placeSearchHospitalToEmergencyController
+  );
+
+  /**
    * Essa chamada serve para retornar todos os hospitais públicos em belo horizonte, mostrando
    * a distãncia em KM do endereço mandado pelo body até o local.
    * @params address: String
-   * @returns Array<PlaceSearchHospitalResponse>
+   * @returns Array<HospitalsModel>
    */
   route.post(
     "/place/hospital/search?:pageToken",
