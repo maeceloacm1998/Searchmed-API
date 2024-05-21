@@ -29,7 +29,7 @@ async function placeSearchHospitalController(req: Request, res: Response) {
 
   if (hospitalName === "" || hospitalName === "undefined") {
     res.status(parseInt(StatusCode.notFound)).send({
-      state: StatusCode.notFound,
+      status: StatusCode.notFound,
       message: "Hospital name must be valid.",
     });
     return;
@@ -37,7 +37,7 @@ async function placeSearchHospitalController(req: Request, res: Response) {
 
   if (!latitude || !longitude) {
     res.status(parseInt(StatusCode.notFound)).send({
-      state: StatusCode.notFound,
+      status: StatusCode.notFound,
       message: "Latitude and longitude must be valid.",
     });
     return;
@@ -66,7 +66,7 @@ async function placeSearchHospitalController(req: Request, res: Response) {
       );
 
       res.status(parseInt(StatusCode.Success)).send({
-        state: StatusCode.Success,
+        status: StatusCode.Success,
         result: paginateResults.map((hospital) => {
           return converterHospitaDtoToModel(hospital);
         }),

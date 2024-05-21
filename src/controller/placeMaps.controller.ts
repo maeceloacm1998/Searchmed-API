@@ -4,7 +4,7 @@ import {
   filterHospitalPerDistance,
   getHospitals,
 } from "../services/places.service";
-import { PlaceState } from "../model/types/PlaceState";
+import { PlaceStatus } from "../model/types/PlaceStatus";
 import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
 
 /**
@@ -13,7 +13,7 @@ import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
  * @param latitude: a latitude do usuário
  * @param longitude: a longitude do usuário
  * @param range: o alcance para buscar hospitais
- * @returns PlaceState<Array<PlaceSearchHospitalsMap>>
+ * @returns PlaceStatus <Array<PlaceSearchHospitalsMap>>
  * @throws NotFound
  */
 async function placeSearchHospitalsMapsController(req: Request, res: Response) {
@@ -28,7 +28,7 @@ async function placeSearchHospitalsMapsController(req: Request, res: Response) {
     return;
   }
 
-  const hospitalsList: PlaceState<Array<HospitalDTOModel>> =
+  const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
     await getHospitals();
 
   switch (hospitalsList.status) {
@@ -43,7 +43,7 @@ async function placeSearchHospitalsMapsController(req: Request, res: Response) {
       );
 
       res.status(parseInt(StatusCode.Success)).send({
-        state: StatusCode.Success,
+        status: StatusCode.Success,
         result: hospitalsListFilteredPerDistance.map(
           (hospital) => hospital.geometry.location
         ),

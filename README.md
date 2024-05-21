@@ -76,7 +76,7 @@ curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.837407
 ```json
 // SUCESSO - 1 Página
 {
-    "state": "200",
+    "status": "200",
     "result": [
         { 10 hospitais }
     ],
@@ -86,7 +86,7 @@ curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.837407
 
 // SUCESSO - Próximas páginas
 {
-    "state": "200",
+    "status": "200",
     "result": [
         { 10 hospitais }
     ],
@@ -96,7 +96,7 @@ curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.837407
 
 // ERROR - Nome do hospital não fornecido
 {
-    "state": "404",
+    "status": "404",
     "message": "Hospital name must be valid."
 }
 

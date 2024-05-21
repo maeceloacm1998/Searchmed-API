@@ -47,14 +47,14 @@ async function placeSearchHospitalToEmergencyController(
 
       if (notExistHospitalInRange(hospitalsListFilteredPerDistance)) {
         res.status(parseInt(StatusCode.notFound)).send({
-          state: StatusCode.notFound,
+          status: StatusCode.notFound,
           result: "Hospital not found. Try to increase the range.",
         });
         return;
       }
 
       res.status(parseInt(StatusCode.Success)).send({
-        state: StatusCode.Success,
+        status: StatusCode.Success,
         result: converterHospitaDtoToModel(hospitalsListFilteredPerDistance[0]),
       });
       break;
@@ -62,7 +62,7 @@ async function placeSearchHospitalToEmergencyController(
 
     case StatusCode.notFound: {
       res.status(parseInt(StatusCode.notFound)).send({
-        state: StatusCode.notFound,
+        status: StatusCode.notFound,
         result: "Hospital not found.",
       });
       break;
