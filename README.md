@@ -23,7 +23,7 @@ Essa serviço foi criado para catalogar os hospitais públicos em Belo Horizonte
 
 ### GET - Pegar latitude e longitude a partir do endereço do usuário
 
-Esse endpoint serve para pegar latitude e longitude de todos os hospitais no raio de 10km do endereço do usuário.
+Esse endpoint serve para pegar latitude e longitude de todos os hospitais no raio de 10km do endereço do usuário. Caso queira aumentar o raio de procura, é possível, basta passar `range=<valor> Ex: range=20`
 
 **Requisição:**
 
