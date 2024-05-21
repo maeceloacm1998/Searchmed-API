@@ -2,7 +2,7 @@
 > Serviço para aplicativo de busca por hospitais
 
 ## Descrição
-Essa serviço foi criado para catalogar os hospitais público em Belo Horizonte, fornecidos pela api PLACE API do Google Maps. O objetivo é através do endereço da pessoa, enviado pelo body das requisições, retornar uma lista de hospitais ordenados pela distância onde a pessoa está.
+Essa serviço foi criado para catalogar os hospitais públicos em Belo Horizonte, fornecidos pela api PLACE API do Google Maps. O objetivo é através do endereço da pessoa, enviado pelo body das requisições, retornar uma lista de hospitais ordenados pela distância onde a pessoa está.
 
 ## Índice
 
