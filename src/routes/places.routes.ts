@@ -107,7 +107,7 @@ function placesRoute(route: Router) {
    *
    * Exemplo de resposta:
    * {
-   * "state": 200,
+   * "status": 200,
    * "result": [
    * { 10 hospitais },
    * ],

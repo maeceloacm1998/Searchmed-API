@@ -16,13 +16,13 @@ import {
 } from "../model/types/HospitalDetailsResponse";
 import { FindPlaceResponse } from "../model/types/FindPlaceResponse";
 import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
-import { PlaceState } from "../model/types/PlaceState";
+import { PlaceStatus } from "../model/types/PlaceStatus";
 import { StatusCode } from "../model/types/StatusCode";
 import hospitalSchema from "../model/schema/HospitalSchema";
 
 async function placeAutoComplete(
   address: string
-): Promise<PlaceState<PlaceAutocompleteResult[]>> {
+): Promise<PlaceStatus<PlaceAutocompleteResult[]>> {
   try {
     const client: Client = new Client();
     const request: PlaceAutocompleteRequest = {
@@ -52,7 +52,7 @@ async function placeAutoComplete(
  * @returns Array<HospitalDTOModel>
  * @throws NotFound
  */
-async function getHospitals(): Promise<PlaceState<HospitalDTOModel[]>> {
+async function getHospitals(): Promise<PlaceStatus<HospitalDTOModel[]>> {
   try {
     const hospitalList: Array<HospitalDTOModel> = await hospitalSchema
       .find()
@@ -72,7 +72,7 @@ async function getHospitals(): Promise<PlaceState<HospitalDTOModel[]>> {
 
 async function placeSearchHospital(
   address: string
-): Promise<PlaceState<HospitalDTOModel[]>> {
+): Promise<PlaceStatus<HospitalDTOModel[]>> {
   try {
     const { result } = await findPlace(address);
     const hospitalList = await hospitalSchema.find().exec();
@@ -128,7 +128,7 @@ function filterHospitalPerDistance(
 async function findPlace(
   address: string,
   type?: PlaceType1 | undefined
-): Promise<PlaceState<FindPlaceResponse>> {
+): Promise<PlaceStatus<FindPlaceResponse>> {
   try {
     const client: Client = new Client();
     let request: TextSearchRequest = {
@@ -160,7 +160,7 @@ async function findPlace(
 
 async function placeHospitalDetails(
   placeId: string
-): Promise<PlaceState<HospitalDestailsResponse>> {
+): Promise<PlaceStatus<HospitalDestailsResponse>> {
   try {
     const client: Client = new Client();
     const request: PlaceDetailsRequest = {
