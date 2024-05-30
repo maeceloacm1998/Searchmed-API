@@ -1,26 +1,25 @@
 import express, { Application } from "express";
-import { invoke } from "./src/routes/index";
+import { invoke } from "./src/routes";
+import { env } from "./src/helpers/env";
 import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 
 const app: Application = express();
-const port = process.env.PORT || 3000;
+const port = env.PORT || 3000;
 
 function middlewares() {
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.json());
-  dotenv.config();
 }
 
 function connectMongDb() {
   mongoose
-    .connect(process.env.MONGODB_URI as string, {
-      dbName: process.env.DB_NAME,
-      user: process.env.DB_USER,
-      pass: process.env.DB_PASS,
+    .connect(env.MONGODB_URI as string, {
+      dbName: env.DB_NAME,
+      user: env.DB_USER,
+      pass: env.DB_PASS,
     })
     .then(() => {
       console.log("Mongodb connected....");
@@ -45,5 +44,5 @@ connectMongDb();
 app.use(invoke());
 
 app.listen(port, () => {
-  console.log(`Server iniciado na porta ${port}`);
+  console.log(`server init on this port: ${port}`);
 });

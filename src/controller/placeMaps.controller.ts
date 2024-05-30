@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { StatusCode } from "../model/types/StatusCode";
+import { StatusCode } from "@models/types/status.code";
 import {
   filterHospitalPerDistance,
   getHospitals,
-} from "../services/places.service";
-import { PlaceStatus } from "../model/types/PlaceStatus";
-import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
+} from "@services/places.service";
+import { PlaceStatus } from "@models/types/PlaceStatus";
+import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
 
 /**
  * Controlador para a rota /place/hospitals/maps.
@@ -20,13 +20,6 @@ async function placeSearchHospitalsMapsController(req: Request, res: Response) {
   const latitude = Number(req.query.latitude);
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
-
-  if (isNaN(latitude) || isNaN(longitude)) {
-    res
-      .status(parseInt(StatusCode.notFound))
-      .send("Latitude and Longitude must be valid numbers.");
-    return;
-  }
 
   const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
     await getHospitals();

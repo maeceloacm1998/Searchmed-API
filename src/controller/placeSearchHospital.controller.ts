@@ -1,9 +1,9 @@
-import { StatusCode } from "../model/types/StatusCode";
-import { converterHospitaDtoToModel } from "../model/types/models/HospitalsModel";
+import { StatusCode } from "@models/types/status.code";
+import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
 import {
   filterHospitalPerDistance,
   getHospitals,
-} from "../services/places.service";
+} from "@services/places.service";
 import { Request, Response } from "express";
 
 /**

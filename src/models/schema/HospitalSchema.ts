@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { HospitalDTOModel } from "../types/models/dto/HospitalDTOModel";
+import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
 
 export interface IHospitalSchema extends HospitalDTOModel, Document {}
 

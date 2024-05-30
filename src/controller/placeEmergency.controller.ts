@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import {
   filterHospitalPerDistance,
   getHospitals,
-} from "../services/places.service";
-import { StatusCode } from "../model/types/StatusCode";
-import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
-import { converterHospitaDtoToModel } from "../model/types/models/HospitalsModel";
+} from "@services/places.service";
+import { StatusCode } from "@models/types/status.code";
+import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
 
 /**
  * Busca o hospital mais próximo de acordo com a latitude e longitude informada.

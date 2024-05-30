@@ -6,6 +6,7 @@ import {
   placeSearchHospitalToEmergencyController,
   placeSearchHospitalsMapsController,
 } from "../controller/index";
+import { validateLatLng } from "@models/validations/validator";
 
 function placeAutoCompleteRoute(route: Router) {
   /**
@@ -45,7 +46,9 @@ function placesRoute(route: Router) {
    * @see https://developers.google.com/maps/documentation/places/web-service/search#PlaceSearchRequests
    * @see https://developers.google.com/maps/documentation/places/web-service/search#PlaceSearchResults
    */
-  route.get("/place/hospitals/maps", placeSearchHospitalsMapsController);
+  route
+    .route("/place/hospitals/maps")
+    .get(validateLatLng, placeSearchHospitalsMapsController);
 
   /**
    * Essa chamada serve para retornar o hospital público de emergência mais próximo

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { StatusCode } from "../model/types/StatusCode";
+import { StatusCode } from "@models/types/status.code";
 import {
   placeAutoComplete,
   placeHospitalDetails,
   placeSearchHospital,
-} from "../services/places.service";
+} from "@services/places.service";
 
 async function placeAutoCompleteController(req: Request, res: Response) {
   const address: string = req.body.address;
