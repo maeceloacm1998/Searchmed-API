@@ -27,11 +27,6 @@ async function placeSearchHospitalToEmergencyController(
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
 
-  if (isNaN(latitude) || isNaN(longitude)) {
-    res.status(404).send("Latitude and Longitude must be valid numbers.");
-    return;
-  }
-
   const hospitalsList = await getHospitals();
 
   switch (hospitalsList.status) {
@@ -46,8 +41,8 @@ async function placeSearchHospitalToEmergencyController(
       );
 
       if (notExistHospitalInRange(hospitalsListFilteredPerDistance)) {
-        res.status(parseInt(StatusCode.notFound)).send({
-          status: StatusCode.notFound,
+        res.status(parseInt(StatusCode.NotRange)).send({
+          status: StatusCode.NotRange,
           result: "Hospital not found. Try to increase the range.",
         });
         return;
