@@ -71,6 +71,30 @@ async function getHospitals(): Promise<PlaceStatus<HospitalDTOModel[]>> {
   }
 }
 
+async function getFilteredHospitals(
+  hospitalName: string,
+  page: number,
+  limit: number
+): Promise<PlaceStatus<HospitalDTOModel[]>> {
+  try {
+    const hospitalList: Array<HospitalDTOModel> = await hospitalSchema
+      .find({ name: { $regex: new RegExp(hospitalName, "i") } })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+
+    return {
+      status: StatusCode.Success,
+      result: hospitalList,
+    };
+  } catch (e) {
+    return {
+      status: StatusCode.notFound,
+      result: [] as HospitalDTOModel[],
+    };
+  }
+}
+
 async function placeSearchHospital(
   address: string
 ): Promise<PlaceStatus<HospitalDTOModel[]>> {
@@ -191,5 +215,6 @@ export {
   placeSearchHospital,
   placeHospitalDetails,
   getHospitals,
+  getFilteredHospitals,
   filterHospitalPerDistance,
 };
