@@ -6,7 +6,10 @@ import {
   placeSearchHospitalToEmergencyController,
   placeSearchHospitalsMapsController,
 } from "../controller/index";
-import { validateLatLng } from "@models/validations/validator";
+import {
+  validateLatLng,
+  validateSearchHospital,
+} from "@models/validations/validator";
 
 function placeAutoCompleteRoute(route: Router) {
   /**
@@ -88,10 +91,9 @@ function placesRoute(route: Router) {
    * ]
    * }
    */
-  route.get(
-    "/place/hospitals/emergency",
-    placeSearchHospitalToEmergencyController
-  );
+  route
+    .route("/place/hospitals/emergency")
+    .get(validateLatLng, placeSearchHospitalToEmergencyController);
 
   /**
    * Essa chamada serve para retornar uma lista de hospitais de acordo com o nome passado por parametro.
@@ -118,7 +120,9 @@ function placesRoute(route: Router) {
    * "prevPage": "http://localhost:3000/place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=1&limit=10"
    * }
    */
-  route.get("/place/hospital/search", placeSearchHospitalController);
+  route
+    .route("/place/hospital/search")
+    .get(validateSearchHospital, placeSearchHospitalController);
 
   /**
    * Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId

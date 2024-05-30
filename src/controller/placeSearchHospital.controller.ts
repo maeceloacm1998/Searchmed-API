@@ -27,22 +27,6 @@ async function placeSearchHospitalController(req: Request, res: Response) {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
 
-  if (hospitalName === "" || hospitalName === "undefined") {
-    res.status(parseInt(StatusCode.notFound)).send({
-      status: StatusCode.notFound,
-      message: "Hospital name must be valid.",
-    });
-    return;
-  }
-
-  if (!latitude || !longitude) {
-    res.status(parseInt(StatusCode.notFound)).send({
-      status: StatusCode.notFound,
-      message: "Latitude and longitude must be valid.",
-    });
-    return;
-  }
-
   const hospitalsList = await getHospitals();
 
   switch (hospitalsList.status) {
