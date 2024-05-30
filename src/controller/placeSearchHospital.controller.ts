@@ -2,7 +2,7 @@ import { StatusCode } from "@models/types/status.code";
 import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
 import {
   filterHospitalPerDistance,
-  getHospitals,
+  getFilteredHospitals,
 } from "@services/places.service";
 import { Request, Response } from "express";
 
@@ -27,16 +27,12 @@ async function placeSearchHospitalController(req: Request, res: Response) {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
 
-  const hospitalsList = await getHospitals();
+  const hospitalsList = await getFilteredHospitals(hospitalName, page, limit);
 
   switch (hospitalsList.status) {
     case StatusCode.Success: {
-      const matchHospitals = hospitalsList.result.filter((hospital) => {
-        return hospital.name.toLowerCase().includes(hospitalName.toLowerCase());
-      });
-
       const hospitalsListFilteredPerDistance = filterHospitalPerDistance(
-        matchHospitals,
+        hospitalsList.result,
         {
           lat: latitude,
           lng: longitude,
@@ -44,18 +40,11 @@ async function placeSearchHospitalController(req: Request, res: Response) {
         getRange(range)
       );
 
-      const paginateResults = hospitalsListFilteredPerDistance.slice(
-        calculateStartIndex(page, limit),
-        calculateEndIndex(page, limit)
-      );
-
       res.status(parseInt(StatusCode.Success)).send({
         status: StatusCode.Success,
-        result: paginateResults.map((hospital) => {
+        result: hospitalsListFilteredPerDistance.map((hospital) => {
           return converterHospitaDtoToModel(hospital);
         }),
-        nextpage: generateNextPageUrl(req, page, limit),
-        prevPage: generatePreviousPageUrl(req, page, limit),
       });
       break;
     }
@@ -74,64 +63,6 @@ async function placeSearchHospitalController(req: Request, res: Response) {
  */
 function getRange(range: number): number {
   return range || 10000;
-}
-
-/**
- * Generate the next page URL
- * @param req  The request object
- * @param page  The page number to generate the next page URL
- * @param limit  The limit of items per page to generate the next page URL
- * @returns The next page URL or null if there is no next page URL
- */
-function generateNextPageUrl(
-  req: Request,
-  page: number,
-  limit: number
-): string | null {
-  return page < limit
-    ? `${req.protocol}://${req.headers.host}${req.baseUrl}?page=${
-        page + 1
-      }&limit=${limit}`
-    : null;
-}
-
-/**
- * Generate the previous page URL
- * @param req  The request object
- * @param page  The page number to generate the previous page URL
- * @param limit  The limit of items per page to generate the previous page URL
- * @returns The previous page URL or null if there is no previous page URL
- */
-function generatePreviousPageUrl(
-  req: Request,
-  page: number,
-  limit: number
-): string | null {
-  return page > 1
-    ? `${req.protocol}://${req.headers.host}${req.baseUrl}?page=${
-        page - 1
-      }&limit=${limit}`
-    : null;
-}
-
-/**
- * Calculate the start index of the page to paginate
- * @param page  The page number
- * @param limit  The limit of items per page
- * @returns The start index
- */
-function calculateStartIndex(page: number, limit: number): number {
-  return (page - 1) * limit;
-}
-
-/**
- * Calculate the end index of the page to paginate
- * @param page  The page number
- * @param limit  The limit of items per page
- * @returns The end index
- */
-function calculateEndIndex(page: number, limit: number): number {
-  return page * limit;
 }
 
 export { placeSearchHospitalController };
