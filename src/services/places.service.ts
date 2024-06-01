@@ -7,19 +7,19 @@ import {
   PlaceDetailsRequest,
   PlaceType1,
   TextSearchRequest,
-} from "@googlemaps/google-maps-services-js";
-import { getPreciseDistance } from "geolib";
+} from '@googlemaps/google-maps-services-js';
+import { getPreciseDistance } from 'geolib';
 
 import {
   HospitalDestailsResponse,
   converterToHospitaDetailsResponse,
-} from "@models/types/HospitalDetailsResponse";
-import { FindPlaceResponse } from "@models/types/FindPlaceResponse";
-import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
-import { PlaceStatus } from "@models/types/PlaceStatus";
-import { StatusCode } from "@models/types/status.code";
-import hospitalSchema from "@models/schema/HospitalSchema";
-import { env } from "@helpers/env";
+} from '@models/types/HospitalDetailsResponse';
+import { FindPlaceResponse } from '@models/types/FindPlaceResponse';
+import { HospitalDTOModel } from '@models/types/dto/HospitalDTOModel';
+import { PlaceStatus } from '@models/types/PlaceStatus';
+import { StatusCode } from '@models/types/status.code';
+import hospitalSchema from '@models/schema/HospitalSchema';
+import { env } from '@helpers/env';
 
 async function placeAutoComplete(
   address: string
@@ -29,8 +29,8 @@ async function placeAutoComplete(
     const request: PlaceAutocompleteRequest = {
       params: {
         input: address,
-        language: "pt_BR",
-        components: ["country:br"],
+        language: 'pt_BR',
+        components: ['country:br'],
         key: env.PLACE_API_KEY as string,
       },
     };
@@ -71,14 +71,37 @@ async function getHospitals(): Promise<PlaceStatus<HospitalDTOModel[]>> {
   }
 }
 
-async function getFilteredHospitals(
-  hospitalName: string,
-  page: number,
-  limit: number
-): Promise<PlaceStatus<HospitalDTOModel[]>> {
+async function getFilteredHospitals({
+  name,
+  limit,
+  page,
+  lat,
+  lng,
+  range,
+}: {
+  name: string;
+  page: number;
+  limit: number;
+  lat?: number;
+  lng?: number;
+  range?: number;
+}): Promise<PlaceStatus<HospitalDTOModel[]>> {
   try {
     const hospitalList: Array<HospitalDTOModel> = await hospitalSchema
-      .find({ name: { $regex: new RegExp(hospitalName, "i") } })
+      .find({
+        name: {
+          $regex: new RegExp(name, 'i'),
+        },
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [lng, lat],
+            },
+            $maxDistance: range,
+          },
+        },
+      })
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();
