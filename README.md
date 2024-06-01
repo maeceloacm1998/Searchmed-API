@@ -21,42 +21,84 @@ Essa serviço foi criado para catalogar os hospitais públicos em Belo Horizonte
 
 ## Endpoints da API
 
-### GET - Pegar latitude e longitude a partir do endereço do usuário
+### GET - Pegar Hospitais proximos ao endereço do usuário
 
-Esse endpoint serve para pegar latitude e longitude de todos os hospitais no raio de 10km do endereço do usuário. Caso queira aumentar o raio de procura, é possível, basta passar `range=<valor> Ex: range=20`
+Esse endpoint serve para pegar Hospitais de todos os hospitais no raio de 10km do endereço do usuário. Caso queira aumentar o raio de procura, é possível, basta passar `range=<valor> Ex: range=20`
 
 **Requisição:**
 
 ```bash
-curl --location 'http://localhost:3000/place/hospitals/maps?latitude=-19.8374075&longitude=-43.9836488' \
+curl --location 'http://localhost:3000/place/hospitals/maps?latitude=-19.8374075&longitude=-43.9836488&range=3000' \
 --data ''
 ```
 
 **Resposta:**
 ```json
 // SUCESSO
-[
-   "status": "200",
-   "result": {
-     "latitude": -19.9198,
-     "longitude": -43.9386
-   }
-]
+{
+    "status": "200",
+    "result": [
+        {
+            "place_id": "ChIJx6aBpCCQpgARKbbLCMWV7a0",
+            "address": "Rua Dr. Álvaro Camargos, 2002 - São João Batista, Belo Horizonte - MG, 31565-413, Brasil",
+            "name": "Hospital",
+            "rating": 5,
+            "distance": 2134.2881050294654,
+            "isEmergencyHospital": false,
+            "phoneNumber": "",
+            "reviews": [
+                {
+                    "author": "Daniela Souza de Jesus",
+                    "authorUrl": "https://www.google.com/maps/contrib/110812265570076002874/reviews",
+                    "photo": "https://lh3.googleusercontent.com/a/ACg8ocKNNVgdPAHkibTHH7jFar-o1gLLengFoPBS_eHPTfLISh9_zCU=s128-c0x00000000-cc-rp-mo",
+                    "rating": 5,
+                    "comment": "",
+                    "date": "2024-03-20T20:25:13.000Z"
+                },
+                {
+                    "author": "Sara Paula",
+                    "authorUrl": "https://www.google.com/maps/contrib/111131077039161517866/reviews",
+                    "photo": "https://lh3.googleusercontent.com/a-/ALV-UjWCAJE0Nw_WYKkLr9oWeTWf3SFiz10a1pRW6dP85LRDkC5JBBgHhg=s128-c0x00000000-cc-rp-mo-ba4",
+                    "rating": 5,
+                    "comment": "",
+                    "date": "2020-08-22T11:17:40.000Z"
+                }
+            ],
+            "location": {
+                "latitude": -19.82703099999999,
+                "longitude": -43.96651019999999
+            }
+        }
+    ]
+}
 
 // SUCESSO - Hospitais não encontrados
-[
-   "status": "200",
-   "result": {
-     "latitude": -19.9198,
-     "longitude": -43.9386
-   }
-]
+{
+    "status": "200",
+    "result": []
+}
 
-// ERROR - Endereço do usuário não foi passado 
-[
-   "status": "404",
-   "result": "Latitude and Longitude must be valid numbers."
-]
+// ERROR - Longitude não passada por parâmetro
+{
+    "status": "409",
+    "result": [
+        {
+            "path": "longitude",
+            "message": "Longitude is required"
+        }
+    ]
+}
+
+// ERROR - Latitude não passada por parâmetro
+{
+    "status": "409",
+    "result": [
+        {
+            "path": "latitude",
+            "message": "latitude is required"
+        }
+    ]
+}
 ```
 
 ### GET - Lista de busca de hospitais pelo nome
@@ -67,43 +109,169 @@ ressaltar que esses hospitais são ordenados baseados na localidade do usuário.
 **Requisição:**
 
 ```bash
-curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.8374075&longitude=-43.9836488&hospitalName=Hosp&page=3&limite=10&=' \
+curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.8374075&longitude=-43.9836488&hospitalName=Hosp&range=3000' \
 --header 'Content-Type: application/json' \
 --data ''
 ```
 
 **Resposta:**
 ```json
-// SUCESSO - 1 Página
+// SUCESSO
 {
     "status": "200",
     "result": [
-        { 10 hospitais }
-    ],
-    "nextpage": "http://localhost:3000?page=2&limit=10",
-    "prevPage": null
+        {
+            "place_id": "ChIJx6aBpCCQpgARKbbLCMWV7a0",
+            "address": "Rua Dr. Álvaro Camargos, 2002 - São João Batista, Belo Horizonte - MG, 31565-413, Brasil",
+            "name": "Hospital",
+            "rating": 5,
+            "distance": 2134.2881050294654,
+            "isEmergencyHospital": false,
+            "phoneNumber": "",
+            "reviews": [
+                {
+                    "author": "Daniela Souza de Jesus",
+                    "authorUrl": "https://www.google.com/maps/contrib/110812265570076002874/reviews",
+                    "photo": "https://lh3.googleusercontent.com/a/ACg8ocKNNVgdPAHkibTHH7jFar-o1gLLengFoPBS_eHPTfLISh9_zCU=s128-c0x00000000-cc-rp-mo",
+                    "rating": 5,
+                    "comment": "",
+                    "date": "2024-03-20T20:25:13.000Z"
+                },
+                {
+                    "author": "Sara Paula",
+                    "authorUrl": "https://www.google.com/maps/contrib/111131077039161517866/reviews",
+                    "photo": "https://lh3.googleusercontent.com/a-/ALV-UjWCAJE0Nw_WYKkLr9oWeTWf3SFiz10a1pRW6dP85LRDkC5JBBgHhg=s128-c0x00000000-cc-rp-mo-ba4",
+                    "rating": 5,
+                    "comment": "",
+                    "date": "2020-08-22T11:17:40.000Z"
+                }
+            ],
+            "location": {
+                "latitude": -19.82703099999999,
+                "longitude": -43.96651019999999
+            }
+        }
+    ]
 }
 
-// SUCESSO - Próximas páginas
+// SUCESSO - Hospitais não encontrados
 {
     "status": "200",
-    "result": [
-        { 10 hospitais }
-    ],
-    "nextpage": "http://localhost:3000?page=4&limit=10",
-    "prevPage": "http://localhost:3000?page=2&limit=10"
+    "result": []
 }
 
 // ERROR - Nome do hospital não fornecido
 {
-    "status": "404",
-    "message": "Hospital name must be valid."
+    "status": "409",
+    "result": [
+        {
+            "path": "hospitalName",
+            "message": "Hospital name is required"
+        }
+    ]
 }
 
-// ERROR - Endereço do usuário não foi passado 
+// ERROR - Longitude não passada por parâmetro
 {
-   "status": "404",
-   "result": "Latitude and Longitude must be valid numbers."
+    "status": "409",
+    "result": [
+        {
+            "path": "longitude",
+            "message": "Longitude is required"
+        }
+    ]
+}
+
+// ERROR - Latitude não passada por parâmetro
+{
+    "status": "409",
+    "result": [
+        {
+            "path": "latitude",
+            "message": "latitude is required"
+        }
+    ]
+}
+```
+
+### GET - Pegar o hospital mais próximo do usuário (Casos de emergência)
+
+Esse endpoint serve para pegar o hospital mais próximo dele, usando como uma função de emergência, na qual ao passar
+a latitude e a longitude, sem importar com o range, vai buscar o hospital mais próximo.
+
+**Requisição:**
+
+```bash
+curl --location 'http://localhost:3000/place/hospitals/emergency?latitude=-19.8374075&longitude=-43.9836488' \
+--data ''
+```
+
+**Resposta:**
+```json
+// SUCESSO
+{
+    "status": "200",
+    "result": [
+        {
+            "place_id": "ChIJx6aBpCCQpgARKbbLCMWV7a0",
+            "address": "Rua Dr. Álvaro Camargos, 2002 - São João Batista, Belo Horizonte - MG, 31565-413, Brasil",
+            "name": "Hospital",
+            "rating": 5,
+            "distance": 2134.2881050294654,
+            "isEmergencyHospital": false,
+            "phoneNumber": "",
+            "reviews": [
+                {
+                    "author": "Daniela Souza de Jesus",
+                    "authorUrl": "https://www.google.com/maps/contrib/110812265570076002874/reviews",
+                    "photo": "https://lh3.googleusercontent.com/a/ACg8ocKNNVgdPAHkibTHH7jFar-o1gLLengFoPBS_eHPTfLISh9_zCU=s128-c0x00000000-cc-rp-mo",
+                    "rating": 5,
+                    "comment": "",
+                    "date": "2024-03-20T20:25:13.000Z"
+                },
+                {
+                    "author": "Sara Paula",
+                    "authorUrl": "https://www.google.com/maps/contrib/111131077039161517866/reviews",
+                    "photo": "https://lh3.googleusercontent.com/a-/ALV-UjWCAJE0Nw_WYKkLr9oWeTWf3SFiz10a1pRW6dP85LRDkC5JBBgHhg=s128-c0x00000000-cc-rp-mo-ba4",
+                    "rating": 5,
+                    "comment": "",
+                    "date": "2020-08-22T11:17:40.000Z"
+                }
+            ],
+            "location": {
+                "latitude": -19.82703099999999,
+                "longitude": -43.96651019999999
+            }
+        }
+    ]
+}
+
+// SUCESSO - Hospitais não encontrados
+{
+    "status": "200",
+    "result": []
+}
+
+// ERROR - Longitude não passada por parâmetro
+{
+    "status": "409",
+    "result": [
+        {
+            "path": "longitude",
+            "message": "Longitude is required"
+        }
+    ]
+}
+
+// ERROR - Latitude não passada por parâmetro
+{
+    "status": "409",
+    "result": [
+        {
+            "path": "latitude",
+            "message": "latitude is required"
+        }
+    ]
 }
 ```
 
@@ -137,86 +305,6 @@ Curl Exemple:
 ```
 curl --request POST \
   --url https://searchmed.onrender.com/place/autocomplete \
-  --header 'Content-Type: application/json' \
-  --data '{
-	"address": "Rua hildebrando de Oliveira, 235"
-}'
-```
-
----
-
-### Buscar hospitais por distância
-- POST ```/place/hospital/search```
-  
-Essa chamada serve para retornar todos os hospitais públicos em belo horizonte, mostrando a distãncia em KM do endereço mandado pelo body até o local.
-
-Request:
-```
-{
-	"address": <Endereço aqui>
-}
-```
-
-Respomse:
-```
-[
-		{
-			"_id": "64b9cfdd9e149a083ac6d3da",
-			"address": "R. das Gabirobas, 01 - Vila Cloris, Belo Horizonte - MG, 31744-012, Brasil",
-			"name": "Pronto-Socorro do Hospital Risoleta",
-			"opening_hours": {
-				"open_now": true
-			},
-			"place_id": "ChIJZcL4a_uPpgARSlksk1vVyhw",
-			"rating": 0,
-			"distance": 4248,
-			"types": [
-				"hospital",
-				"health",
-				"point_of_interest",
-				"establishment"
-			],
-			"isEmergencyHospital": false,
-			"__v": 0
-		},
-]
-```
-
-Curl Exemple:
-```
-curl --request POST \
-  --url https://searchmed.onrender.com/place/hospital/search \
-  --header 'Content-Type: application/json' \
-  --data '{
-	"address": "Rua hildebrando de Oliveira, 235"
-}'
-```
-
----
-
-### Buscar detalhes do hospital
-- POST ```/place/hospital/details?:placeid```
-  
-Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId
-
-Respomse:
-```
-[
-	{
-		"id": "0",
-		"address": "Rua Hildebrando de Oliveira, 235 - Vila Copacabana, Belo Horizonte - MG, Brasil"
-	},
-	{
-		"id": "1",
-		"address": "Rua Hildebrando de Oliveira, 235 - São Sebastião do Uatumã, AM, Brasil"
-	}
-]
-```
-
-Curl Exemple:
-```
-curl --request POST \
-  --url https://searchmed.onrender.com/place/hospital/search \
   --header 'Content-Type: application/json' \
   --data '{
 	"address": "Rua hildebrando de Oliveira, 235"
