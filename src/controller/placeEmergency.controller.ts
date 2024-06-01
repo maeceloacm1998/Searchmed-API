@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
-import {
-  filterHospitalPerDistance,
-  getHospitals,
-} from "../services/places.service";
-import { StatusCode } from "../model/types/StatusCode";
-import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
-import { converterHospitaDtoToModel } from "../model/types/models/HospitalsModel";
+import { getHospitals } from "@services/places.service";
+import { StatusCode } from "@models/types/status.code";
+import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
+import { PlaceStatus } from "@/models/types/PlaceStatus";
 
 /**
  * Busca o hospital mais próximo de acordo com a latitude e longitude informada.
@@ -27,42 +25,35 @@ async function placeSearchHospitalToEmergencyController(
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
 
-  if (isNaN(latitude) || isNaN(longitude)) {
-    res.status(404).send("Latitude and Longitude must be valid numbers.");
-    return;
-  }
-
-  const hospitalsList = await getHospitals();
+  const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
+    await getHospitals({
+      page: 1,
+      limit: 10000,
+      lat: latitude,
+      lng: longitude,
+      range: getRange(range),
+    });
 
   switch (hospitalsList.status) {
     case StatusCode.Success: {
-      const hospitalsListFilteredPerDistance = filterHospitalPerDistance(
-        hospitalsList.result,
-        {
-          lat: latitude,
-          lng: longitude,
-        },
-        getRange(range)
-      );
-
-      if (notExistHospitalInRange(hospitalsListFilteredPerDistance)) {
-        res.status(parseInt(StatusCode.notFound)).send({
-          state: StatusCode.notFound,
+      if (notExistHospitalInRange(hospitalsList.result)) {
+        res.status(parseInt(StatusCode.NotRange)).send({
+          status: StatusCode.NotRange,
           result: "Hospital not found. Try to increase the range.",
         });
         return;
       }
 
       res.status(parseInt(StatusCode.Success)).send({
-        state: StatusCode.Success,
-        result: converterHospitaDtoToModel(hospitalsListFilteredPerDistance[0]),
+        status: StatusCode.Success,
+        result: converterHospitaDtoToModel(hospitalsList.result[0]),
       });
       break;
     }
 
     case StatusCode.notFound: {
       res.status(parseInt(StatusCode.notFound)).send({
-        state: StatusCode.notFound,
+        status: StatusCode.notFound,
         result: "Hospital not found.",
       });
       break;

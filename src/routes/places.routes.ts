@@ -2,10 +2,13 @@ import { Router } from "express";
 import {
   placeAutoCompleteController,
   placeSearchHospitalController,
-  placeSearchHospitalDetailsController,
   placeSearchHospitalToEmergencyController,
   placeSearchHospitalsMapsController,
 } from "../controller/index";
+import {
+  validateLatLng,
+  validateSearchHospital,
+} from "@models/validations/validator";
 
 function placeAutoCompleteRoute(route: Router) {
   /**
@@ -45,7 +48,9 @@ function placesRoute(route: Router) {
    * @see https://developers.google.com/maps/documentation/places/web-service/search#PlaceSearchRequests
    * @see https://developers.google.com/maps/documentation/places/web-service/search#PlaceSearchResults
    */
-  route.get("/place/hospitals/maps", placeSearchHospitalsMapsController);
+  route
+    .route("/place/hospitals/maps")
+    .get(validateLatLng, placeSearchHospitalsMapsController);
 
   /**
    * Essa chamada serve para retornar o hospital público de emergência mais próximo
@@ -85,30 +90,38 @@ function placesRoute(route: Router) {
    * ]
    * }
    */
-  route.get(
-    "/place/hospitals/emergency",
-    placeSearchHospitalToEmergencyController
-  );
+  route
+    .route("/place/hospitals/emergency")
+    .get(validateLatLng, placeSearchHospitalToEmergencyController);
 
   /**
-   * Essa chamada serve para retornar todos os hospitais públicos em belo horizonte, mostrando
-   * a distãncia em KM do endereço mandado pelo body até o local.
-   * @params address: String
-   * @returns Array<HospitalsModel>
+   * Essa chamada serve para retornar uma lista de hospitais de acordo com o nome passado por parametro.
+   * @params hospitalName: String
+   * @params latitude: Number
+   * @params longitude: Number
+   * @params range: Number
+   * @params page: Number
+   * @params limit: Number
+   *
+   * @returns Array<HospitalModel>
+   * @throws NotFound
+   *
+   * Exemplo de uso:
+   * /place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=1&limit=10
+   *
+   * Exemplo de resposta:
+   * {
+   * "status": 200,
+   * "result": [
+   * { 10 hospitais },
+   * ],
+   * "nextpage": "http://localhost:3000/place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=2&limit=10",
+   * "prevPage": "http://localhost:3000/place/hospital/search?hospitalName=Santa Casa&latitude=-19.9198&longitude=-43.9386&range=10000&page=1&limit=10"
+   * }
    */
-  route.post(
-    "/place/hospital/search?:pageToken",
-    placeSearchHospitalController
-  );
-
-  /**
-   * Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId
-   * @params placeId: String
-   */
-  route.post(
-    "/place/hospital/details?:placeid",
-    placeSearchHospitalDetailsController
-  );
+  route
+    .route("/place/hospital/search")
+    .get(validateSearchHospital, placeSearchHospitalController);
 }
 
 export { placeAutoCompleteRoute, placesRoute };

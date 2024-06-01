@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
-import { StatusCode } from "../model/types/StatusCode";
-import {
-  filterHospitalPerDistance,
-  getHospitals,
-} from "../services/places.service";
-import { PlaceState } from "../model/types/PlaceState";
-import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
+import { StatusCode } from "@models/types/status.code";
+import { getHospitals } from "@services/places.service";
+import { PlaceStatus } from "@models/types/PlaceStatus";
+import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { converterHospitaDtoToModel } from "../models/types/HospitalsModel";
 
 /**
  * Controlador para a rota /place/hospitals/maps.
@@ -13,7 +11,7 @@ import { HospitalDTOModel } from "../model/types/models/dto/HospitalDTOModel";
  * @param latitude: a latitude do usuário
  * @param longitude: a longitude do usuário
  * @param range: o alcance para buscar hospitais
- * @returns PlaceState<Array<PlaceSearchHospitalsMap>>
+ * @returns PlaceStatus <Array<PlaceSearchHospitalsMap>>
  * @throws NotFound
  */
 async function placeSearchHospitalsMapsController(req: Request, res: Response) {
@@ -21,32 +19,20 @@ async function placeSearchHospitalsMapsController(req: Request, res: Response) {
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
 
-  if (isNaN(latitude) || isNaN(longitude)) {
-    res
-      .status(parseInt(StatusCode.notFound))
-      .send("Latitude and Longitude must be valid numbers.");
-    return;
-  }
-
-  const hospitalsList: PlaceState<Array<HospitalDTOModel>> =
-    await getHospitals();
+  const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
+    await getHospitals({
+      page: 1,
+      limit: 10000,
+      lat: latitude,
+      lng: longitude,
+      range: getRange(range),
+    });
 
   switch (hospitalsList.status) {
     case StatusCode.Success: {
-      const hospitalsListFilteredPerDistance = filterHospitalPerDistance(
-        hospitalsList.result,
-        {
-          lat: latitude,
-          lng: longitude,
-        },
-        getRange(range)
-      );
-
       res.status(parseInt(StatusCode.Success)).send({
-        state: StatusCode.Success,
-        result: hospitalsListFilteredPerDistance.map(
-          (hospital) => hospital.geometry.location
-        ),
+        status: StatusCode.Success,
+        result: hospitalsList.result.map(converterHospitaDtoToModel),
       });
       break;
     }
