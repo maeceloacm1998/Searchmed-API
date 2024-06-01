@@ -1,7 +1,7 @@
 import {
   AddressGeometry,
   AddressType,
-} from "@googlemaps/google-maps-services-js";
+} from '@googlemaps/google-maps-services-js';
 
 export interface HospitalDTOModel {
   place_id: string;
@@ -14,6 +14,10 @@ export interface HospitalDTOModel {
   isEmergencyHospital: boolean;
   phoneNumber: string;
   reviews: Array<HospitalReviewDTO>;
+  location: {
+    type: 'Point';
+    coordinates: number[];
+  };
 }
 
 export interface HospitalReviewDTO {

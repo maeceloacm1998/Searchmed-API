@@ -1,5 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import mongoose, { Schema, Document } from 'mongoose';
+import { HospitalDTOModel } from '@models/types/dto/HospitalDTOModel';
 
 export interface IHospitalSchema extends HospitalDTOModel, Document {}
 
@@ -22,6 +22,17 @@ const HospitalSchema: Schema = new Schema({
   isEmergencyHospital: { type: Boolean, required: false },
   phoneNumber: { type: String, required: false },
   reviews: { type: [ReviewSchema], required: false },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
 });
 
-export default mongoose.model<IHospitalSchema>("Hospitals", HospitalSchema);
+export default mongoose.model<IHospitalSchema>('Hospitals', HospitalSchema);
