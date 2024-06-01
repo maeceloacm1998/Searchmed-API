@@ -1,7 +1,7 @@
-import { StatusCode } from '@models/types/status.code';
-import { converterHospitaDtoToModel } from '@models/types/HospitalsModel';
-import { getFilteredHospitals } from '@services/places.service';
-import { Request, Response } from 'express';
+import { StatusCode } from "@models/types/status.code";
+import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
+import { getFilteredHospitals } from "@services/places.service";
+import { Request, Response } from "express";
 
 /**
  *  Get the range to search for hospitals

@@ -7,19 +7,19 @@ import {
   PlaceDetailsRequest,
   PlaceType1,
   TextSearchRequest,
-} from '@googlemaps/google-maps-services-js';
-import { getPreciseDistance } from 'geolib';
+} from "@googlemaps/google-maps-services-js";
+import { getPreciseDistance } from "geolib";
 
 import {
   HospitalDestailsResponse,
   converterToHospitaDetailsResponse,
-} from '@models/types/HospitalDetailsResponse';
-import { FindPlaceResponse } from '@models/types/FindPlaceResponse';
-import { HospitalDTOModel } from '@models/types/dto/HospitalDTOModel';
-import { PlaceStatus } from '@models/types/PlaceStatus';
-import { StatusCode } from '@models/types/status.code';
-import hospitalSchema from '@models/schema/HospitalSchema';
-import { env } from '@helpers/env';
+} from "@models/types/HospitalDetailsResponse";
+import { FindPlaceResponse } from "@models/types/FindPlaceResponse";
+import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { PlaceStatus } from "@models/types/PlaceStatus";
+import { StatusCode } from "@models/types/status.code";
+import hospitalSchema from "@models/schema/HospitalSchema";
+import { env } from "@helpers/env";
 
 async function placeAutoComplete(
   address: string
@@ -29,8 +29,8 @@ async function placeAutoComplete(
     const request: PlaceAutocompleteRequest = {
       params: {
         input: address,
-        language: 'pt_BR',
-        components: ['country:br'],
+        language: "pt_BR",
+        components: ["country:br"],
         key: env.PLACE_API_KEY as string,
       },
     };
@@ -71,6 +71,12 @@ async function getHospitals(): Promise<PlaceStatus<HospitalDTOModel[]>> {
   }
 }
 
+/**
+ *  Retorna os hospitais filtrados por nome e localização.
+ * @param param0  name: string; page: number; limit: number; lat: number; lng: number; range: number;
+ * @returns Array<HospitalDTOModel> lista de hospitais filtrados por distância
+ * @throws NotFound caso não encontre hospitais
+ */
 async function getFilteredHospitals({
   name,
   limit,
@@ -91,10 +97,10 @@ async function getFilteredHospitals({
       {
         $geoNear: {
           near: {
-            type: 'Point',
+            type: "Point",
             coordinates: [lng, lat],
           },
-          distanceField: 'distance',
+          distanceField: "distance",
           maxDistance: range,
           spherical: true,
         },
@@ -102,7 +108,7 @@ async function getFilteredHospitals({
       {
         $match: {
           name: {
-            $regex: new RegExp(name, 'i'),
+            $regex: new RegExp(name, "i"),
           },
         },
       },
