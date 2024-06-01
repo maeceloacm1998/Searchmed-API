@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register app.ts",
-    "debug": "ndb app.ts"
+    "debug": "ndb app.ts",
+    "migrate": "ts-node ./src/migrations/index.ts"
   },
   "engines": {
     "node": ">=14 <18.17"

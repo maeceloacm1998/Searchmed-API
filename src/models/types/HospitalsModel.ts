@@ -1,5 +1,5 @@
-import { LatLngLiteral } from "@googlemaps/google-maps-services-js";
-import { HospitalDTOModel } from "./dto/HospitalDTOModel";
+import { LatLngLiteral } from '@googlemaps/google-maps-services-js';
+import { HospitalDTOModel } from './dto/HospitalDTOModel';
 
 export interface HospitalModel {
   place_id: string;
@@ -11,6 +11,7 @@ export interface HospitalModel {
   isEmergencyHospital: boolean;
   phoneNumber: string;
   reviews: Array<HospitalReview>;
+  location: HospitalLatLng;
 }
 
 export interface HospitalLatLng {
@@ -45,6 +46,10 @@ export function converterHospitaDtoToModel(
     isEmergencyHospital: hospitalDto.isEmergencyHospital,
     phoneNumber: hospitalDto.phoneNumber,
     reviews: converterReviewDtoToModel(hospitalDto.reviews),
+    location: {
+      latitude: hospitalDto.location.coordinates[1],
+      longitude: hospitalDto.location.coordinates[0],
+    },
   };
 }
 
