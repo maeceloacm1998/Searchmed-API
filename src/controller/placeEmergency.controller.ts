@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
-import {
-  filterHospitalPerDistance,
-  getHospitals,
-} from "@services/places.service";
+import { getHospitals } from "@services/places.service";
 import { StatusCode } from "@models/types/status.code";
 import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
 import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
+import { PlaceStatus } from "@/models/types/PlaceStatus";
 
 /**
  * Busca o hospital mais próximo de acordo com a latitude e longitude informada.
@@ -27,20 +25,18 @@ async function placeSearchHospitalToEmergencyController(
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
 
-  const hospitalsList = await getHospitals();
+  const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
+    await getHospitals({
+      page: 1,
+      limit: 10000,
+      lat: latitude,
+      lng: longitude,
+      range: getRange(range),
+    });
 
   switch (hospitalsList.status) {
     case StatusCode.Success: {
-      const hospitalsListFilteredPerDistance = filterHospitalPerDistance(
-        hospitalsList.result,
-        {
-          lat: latitude,
-          lng: longitude,
-        },
-        getRange(range)
-      );
-
-      if (notExistHospitalInRange(hospitalsListFilteredPerDistance)) {
+      if (notExistHospitalInRange(hospitalsList.result)) {
         res.status(parseInt(StatusCode.NotRange)).send({
           status: StatusCode.NotRange,
           result: "Hospital not found. Try to increase the range.",
@@ -50,7 +46,7 @@ async function placeSearchHospitalToEmergencyController(
 
       res.status(parseInt(StatusCode.Success)).send({
         status: StatusCode.Success,
-        result: converterHospitaDtoToModel(hospitalsListFilteredPerDistance[0]),
+        result: converterHospitaDtoToModel(hospitalsList.result[0]),
       });
       break;
     }

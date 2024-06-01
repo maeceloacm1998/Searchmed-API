@@ -1,10 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCode } from "@models/types/status.code";
-import {
-  placeAutoComplete,
-  placeHospitalDetails,
-  placeSearchHospital,
-} from "@services/places.service";
+import { placeAutoComplete } from "@services/places.service";
 
 async function placeAutoCompleteController(req: Request, res: Response) {
   const address: string = req.body.address;
@@ -31,47 +27,4 @@ async function placeAutoCompleteController(req: Request, res: Response) {
   }
 }
 
-async function placeSearchHospitalController(req: Request, res: Response) {
-  const address: string = req.body.address;
-
-  const searchHospital = await placeSearchHospital(address);
-
-  switch (searchHospital.status) {
-    case StatusCode.Success: {
-      res.status(parseInt(StatusCode.Success)).send(searchHospital);
-      break;
-    }
-
-    case StatusCode.notFound: {
-      res.status(parseInt(StatusCode.notFound)).send([]);
-      break;
-    }
-  }
-}
-
-async function placeSearchHospitalDetailsController(
-  req: Request,
-  res: Response
-) {
-  const placeId = req.query.placeid as string;
-
-  const hospitalDestails = await placeHospitalDetails(placeId);
-
-  switch (hospitalDestails.status) {
-    case StatusCode.Success: {
-      res.status(parseInt(StatusCode.Success)).send(hospitalDestails);
-      break;
-    }
-
-    case StatusCode.notFound: {
-      res.status(parseInt(StatusCode.notFound)).send([]);
-      break;
-    }
-  }
-}
-
-export {
-  placeAutoCompleteController,
-  placeSearchHospitalController,
-  placeSearchHospitalDetailsController,
-};
+export { placeAutoCompleteController };

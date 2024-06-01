@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   placeAutoCompleteController,
   placeSearchHospitalController,
-  placeSearchHospitalDetailsController,
   placeSearchHospitalToEmergencyController,
   placeSearchHospitalsMapsController,
 } from "../controller/index";
@@ -123,15 +122,6 @@ function placesRoute(route: Router) {
   route
     .route("/place/hospital/search")
     .get(validateSearchHospital, placeSearchHospitalController);
-
-  /**
-   * Essa chamada serve para pegar os detalhes daquele hospital específico, através do placeId
-   * @params placeId: String
-   */
-  route.post(
-    "/place/hospital/details?:placeid",
-    placeSearchHospitalDetailsController
-  );
 }
 
 export { placeAutoCompleteRoute, placesRoute };
