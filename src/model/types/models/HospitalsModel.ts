@@ -4,7 +4,6 @@ import { HospitalDTOModel } from "./dto/HospitalDTOModel";
 export interface HospitalModel {
   place_id: string;
   address: string;
-  geometry: HospitalLatLng;
   name: string;
   rating: number;
   distance: number;
@@ -38,27 +37,12 @@ export function converterHospitaDtoToModel(
   return {
     place_id: hospitalDto.place_id,
     address: hospitalDto.address,
-    geometry: converterLatLngToHospitalLatLng(hospitalDto.geometry.location),
     name: hospitalDto.name,
     rating: hospitalDto.rating,
     distance: hospitalDto.distance,
     isEmergencyHospital: hospitalDto.isEmergencyHospital,
     phoneNumber: hospitalDto.phoneNumber,
     reviews: converterReviewDtoToModel(hospitalDto.reviews),
-  };
-}
-
-/**
- * Converte LatLngLiteral para HospitalLatLng
- * @param latLng  LatLngLiteral
- * @returns  HospitalLatLng
- */
-function converterLatLngToHospitalLatLng(
-  latLng: LatLngLiteral
-): HospitalLatLng {
-  return {
-    latitude: latLng.lat,
-    longitude: latLng.lng,
   };
 }
 

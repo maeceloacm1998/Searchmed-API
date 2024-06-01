@@ -6,7 +6,6 @@ import {
 export interface HospitalDTOModel {
   place_id: string;
   address: string;
-  geometry: AddressGeometry;
   name: string;
   rating: number;
   distance: number;

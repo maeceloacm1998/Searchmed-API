@@ -15,7 +15,6 @@ const ReviewSchema: Schema = new Schema({
 const HospitalSchema: Schema = new Schema({
   place_id: { type: String, required: false },
   address: { type: String, required: false },
-  geometry: { type: Schema.Types.Mixed, required: false },
   name: { type: String, required: false },
   rating: { type: Number, required: false },
   distance: { type: Number, required: false },
