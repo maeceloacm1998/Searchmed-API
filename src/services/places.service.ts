@@ -82,29 +82,37 @@ async function getFilteredHospitals({
   name: string;
   page: number;
   limit: number;
-  lat?: number;
-  lng?: number;
-  range?: number;
+  lat: number;
+  lng: number;
+  range: number;
 }): Promise<PlaceStatus<HospitalDTOModel[]>> {
   try {
-    const hospitalList: Array<HospitalDTOModel> = await hospitalSchema
-      .find({
-        name: {
-          $regex: new RegExp(name, 'i'),
+    const hospitalList = await hospitalSchema.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+          distanceField: 'distance',
+          maxDistance: range,
+          spherical: true,
         },
-        location: {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [lng, lat],
-            },
-            $maxDistance: range,
+      },
+      {
+        $match: {
+          name: {
+            $regex: new RegExp(name, 'i'),
           },
         },
-      })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+      },
+      {
+        $skip: (page - 1) * limit,
+      },
+      {
+        $limit: limit,
+      },
+    ]);
 
     return {
       status: StatusCode.Success,
