@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import hospitalSchema from '../models/schema/HospitalSchema';
-import { env } from '../helpers/env';
+import hospitalSchema from "../models/schema/HospitalSchema";
+import { env } from "../helpers/env";
 
 export async function addLocationToHospitalSchema() {
   try {
@@ -19,10 +19,10 @@ export async function addLocationToHospitalSchema() {
         update: {
           $set: {
             location: {
-              type: 'Point',
+              type: "Point",
               coordinates: [
-                document.geometry.location.lng,
-                document.geometry.location.lat,
+                document.location.coordinates[0],
+                document.location.coordinates[1],
               ],
             },
           },
@@ -33,11 +33,11 @@ export async function addLocationToHospitalSchema() {
     await hospitalSchema.bulkWrite(bulkOps);
 
     // Create 2dsphere index on location field
-    await hospitalSchema.collection.createIndex({ location: '2dsphere' });
+    await hospitalSchema.collection.createIndex({ location: "2dsphere" });
 
-    console.log('Migration completed successfully!');
+    console.log("Migration completed successfully!");
   } catch (error) {
-    console.error('Error during migration:', error);
+    console.error("Error during migration:", error);
   } finally {
     mongoose.disconnect();
   }

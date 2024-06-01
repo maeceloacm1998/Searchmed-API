@@ -69,10 +69,6 @@ function placesRoute(route: Router) {
    * {
    * "place_id": "ChIJz7JQJ5Zm0JQR3Jb1J6G5Q1A",
    * "address": "R. dos Otoni, 909 - Santa Efigênia, Belo Horizonte - MG, 30150-270, Brasil",
-   * "geometry": {
-   *  "latitude": -19.9198,
-   * "longitude": -43.9386
-   * },
    * "name": "Hospital da Baleia",
    * "rating": 4.3,
    * "distance": 0.5,

@@ -163,22 +163,6 @@ Respomse:
 		{
 			"_id": "64b9cfdd9e149a083ac6d3da",
 			"address": "R. das Gabirobas, 01 - Vila Cloris, Belo Horizonte - MG, 31744-012, Brasil",
-			"geometry": {
-				"location": {
-					"lat": -19.8178624,
-					"lng": -43.9487557
-				},
-				"viewport": {
-					"northeast": {
-						"lat": -19.81659497010728,
-						"lng": -43.94746712010728
-					},
-					"southwest": {
-						"lat": -19.81929462989272,
-						"lng": -43.95016677989273
-					}
-				}
-			},
 			"name": "Pronto-Socorro do Hospital Risoleta",
 			"opening_hours": {
 				"open_now": true

@@ -1,5 +1,4 @@
 import {
-  AddressGeometry,
   AddressType,
   OpeningHours,
   PlaceData,
@@ -11,7 +10,6 @@ export interface HospitalDestailsResponse {
   currentOpeningHours: OpeningHours | undefined;
   formatted_address: string | undefined;
   formatted_phone_number: string | undefined;
-  geometry: AddressGeometry | undefined;
   international_phone_number: string | undefined;
   name: string | undefined;
   place_id: string | undefined;
@@ -30,7 +28,6 @@ export function converterToHospitaDetailsResponse(
     currentOpeningHours: hospitalDetail.opening_hours,
     formatted_address: hospitalDetail.formatted_address,
     formatted_phone_number: hospitalDetail.formatted_phone_number,
-    geometry: hospitalDetail.geometry,
     international_phone_number: hospitalDetail.international_phone_number,
     name: hospitalDetail.name,
     place_id: hospitalDetail.place_id,
