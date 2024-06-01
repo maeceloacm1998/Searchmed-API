@@ -1,5 +1,4 @@
 import {
-  AddressGeometry,
   AddressType,
   OpeningHours,
   PlaceData,

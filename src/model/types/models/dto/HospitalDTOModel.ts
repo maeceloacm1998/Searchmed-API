@@ -1,7 +1,4 @@
-import {
-  AddressGeometry,
-  AddressType,
-} from "@googlemaps/google-maps-services-js";
+import { AddressType } from "@googlemaps/google-maps-services-js";
 
 export interface HospitalDTOModel {
   place_id: string;

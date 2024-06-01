@@ -1,4 +1,3 @@
-import { LatLngLiteral } from "@googlemaps/google-maps-services-js";
 import { HospitalDTOModel } from "./dto/HospitalDTOModel";
 
 export interface HospitalModel {
