@@ -4,6 +4,12 @@ import { HospitalLastSelectedDTO } from "@/models/types/dto/HospitalLastSelected
 import { PlaceStatus } from "@/models/types/PlaceStatus";
 import { StatusCode } from "@/models/types/StatusCode";
 
+/**
+ * Salva o hospital selecionado pelo usuário.
+ * @param userId
+ * @param hospitalName
+ * @returns HospitalLastSelected | NotFound | BadRequest
+ */
 async function onCreatedLastSelectedPlace(
   userId: string,
   hospitalName: string
@@ -38,6 +44,11 @@ async function onCreatedLastSelectedPlace(
   }
 }
 
+/**
+ *  Retorna a lista de hospitais selecionados pelo usuário.
+ * @param userId
+ * @returns Array<HospitalLastSelected> | NotFound | BadRequest
+ */
 async function onGetLastSelectedPlace(
   userId: string
 ): Promise<PlaceStatus<HospitalLastSelectedDTO[]>> {
