@@ -1,4 +1,4 @@
-import { HospitalDTOModel } from "./dto/HospitalDTOModel";
+import { HospitalDTO } from "./dto/HospitalDTO";
 
 export interface HospitalModel {
   place_id: string;
@@ -27,12 +27,12 @@ export interface HospitalReview {
 }
 
 /**
- * Converter HospitalDTOModel para HospitalModel
- * @param hospitalDto  HospitalDTOModel
+ * Converter HospitalDTO para HospitalModel
+ * @param hospitalDto  HospitalDTO
  * @returns HospitalModel
  */
 export function converterHospitaDtoToModel(
-  hospitalDto: HospitalDTOModel
+  hospitalDto: HospitalDTO
 ): HospitalModel {
   return {
     place_id: hospitalDto.place_id,

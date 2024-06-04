@@ -9,6 +9,11 @@ import {
   validateLatLng,
   validateSearchHospital,
 } from "@models/validations/validator";
+import {
+  placeLastSelectedCreateController,
+  placeLastSelectedGetController,
+} from "@/controller/place.last.selected.controller";
+import { validateHospitalLastSelected } from "../models/validations/validator";
 
 function placeAutoCompleteRoute(route: Router) {
   /**
@@ -69,10 +74,6 @@ function placesRoute(route: Router) {
    * {
    * "place_id": "ChIJz7JQJ5Zm0JQR3Jb1J6G5Q1A",
    * "address": "R. dos Otoni, 909 - Santa Efigênia, Belo Horizonte - MG, 30150-270, Brasil",
-   * "geometry": {
-   *  "latitude": -19.9198,
-   * "longitude": -43.9386
-   * },
    * "name": "Hospital da Baleia",
    * "rating": 4.3,
    * "distance": 0.5,
@@ -122,6 +123,56 @@ function placesRoute(route: Router) {
   route
     .route("/place/hospital/search")
     .get(validateSearchHospital, placeSearchHospitalController);
+
+  /**
+   * Essa chamada serve para salvar o hospital selecionado pelo usuário.
+   * @params userId: String
+   * @params hospitalName: String
+   * @returns PlaceLastSelected | NotFound
+   * @throws NotFound
+   * @throws BadRequest
+   *
+   * Exemplo de uso:
+   * /place/hospital/lastselected/create?userId=123&hospitalName=Santa Casa
+   *
+   * Exemplo de resposta:
+   * {
+   * "status": 200,
+   * "result": {
+   * "userId": "123",
+   * "hospitalName": "Santa Casa",
+   * "createdAt": "2021-08-10T00:00:00.000Z"
+   * }
+   * }
+   */
+  route
+    .route("/place/hospital/lastselected/create")
+    .post(validateHospitalLastSelected, placeLastSelectedCreateController);
+
+  /**
+   * Essa chamada serve para retornar todos os hospitais selecionados pelo usuário.
+   * @params userId: String
+   * @returns Array<PlaceLastSelected> | NotFound | BadRequest
+   * @throws NotFound
+   *
+   * Exemplo de uso:
+   * /place/hospital/lastselected?userId=123
+   *
+   * Exemplo de resposta:
+   * {
+   * "status": 200,
+   * "result": [
+   * {
+   * "userId": "123",
+   * "hospitalName": "Santa Casa",
+   * "createdAt": "2021-08-10T00:00:00.000Z"
+   * }
+   * ]
+   * }
+   */
+  route
+    .route("/place/hospital/lastselected")
+    .get(validateHospitalLastSelected, placeLastSelectedGetController);
 }
 
 export { placeAutoCompleteRoute, placesRoute };

@@ -1,5 +1,5 @@
 // import HospitalSchema from "@models/schema/HospitalSchema";
-// import { StatusCode } from "@models/types/status.code";
+// import { StatusCode } from "@models/types/StatusCode";
 // import { getHospitals, placeHospitalDetails } from "@services/places.service";
 
 // Serve de exemplo para atualizações no banco de dados

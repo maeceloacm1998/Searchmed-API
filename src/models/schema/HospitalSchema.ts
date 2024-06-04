@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { HospitalDTOModel } from '@models/types/dto/HospitalDTOModel';
+import mongoose, { Schema, Document } from "mongoose";
+import { HospitalDTO } from "@models/types/dto/HospitalDTO";
 
-export interface IHospitalSchema extends HospitalDTOModel, Document {}
+export interface IHospitalSchema extends HospitalDTO, Document {}
 
 const ReviewSchema: Schema = new Schema({
   author: { type: String, required: true },
@@ -15,7 +15,6 @@ const ReviewSchema: Schema = new Schema({
 const HospitalSchema: Schema = new Schema({
   place_id: { type: String, required: false },
   address: { type: String, required: false },
-  geometry: { type: Schema.Types.Mixed, required: false },
   name: { type: String, required: false },
   rating: { type: Number, required: false },
   distance: { type: Number, required: false },
@@ -25,7 +24,7 @@ const HospitalSchema: Schema = new Schema({
   location: {
     type: {
       type: String,
-      enum: ['Point'],
+      enum: ["Point"],
       required: true,
     },
     coordinates: {
@@ -35,4 +34,4 @@ const HospitalSchema: Schema = new Schema({
   },
 });
 
-export default mongoose.model<IHospitalSchema>('Hospitals', HospitalSchema);
+export default mongoose.model<IHospitalSchema>("Hospitals", HospitalSchema);

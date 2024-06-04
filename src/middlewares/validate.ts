@@ -1,4 +1,4 @@
-import { StatusCode } from "@models/types/status.code";
+import { StatusCode } from "@models/types/StatusCode";
 import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 export const validate =

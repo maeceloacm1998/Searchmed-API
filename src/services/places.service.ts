@@ -4,9 +4,9 @@ import {
   PlaceAutocompleteResult,
 } from "@googlemaps/google-maps-services-js";
 
-import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { HospitalDTO } from "@models/types/dto/HospitalDTO";
 import { PlaceStatus } from "@models/types/PlaceStatus";
-import { StatusCode } from "@models/types/status.code";
+import { StatusCode } from "@models/types/StatusCode";
 import hospitalSchema from "@models/schema/HospitalSchema";
 import { env } from "@helpers/env";
 
@@ -39,7 +39,7 @@ async function placeAutoComplete(
 
 /**
  * Retorna todos os hospitais públicos em Belo Horizonte.
- * @returns Array<HospitalDTOModel>
+ * @returns Array<HospitalDTO>
  * @throws NotFound
  */
 async function getHospitals({
@@ -54,7 +54,7 @@ async function getHospitals({
   lat: number;
   lng: number;
   range: number;
-}): Promise<PlaceStatus<HospitalDTOModel[]>> {
+}): Promise<PlaceStatus<HospitalDTO[]>> {
   try {
     const hospitalList = await hospitalSchema.aggregate([
       {
@@ -83,7 +83,7 @@ async function getHospitals({
   } catch (e) {
     return {
       status: StatusCode.notFound,
-      result: [] as HospitalDTOModel[],
+      result: [] as HospitalDTO[],
     };
   }
 }
@@ -91,7 +91,7 @@ async function getHospitals({
 /**
  *  Retorna os hospitais filtrados por nome e localização.
  * @param param0  name: string; page: number; limit: number; lat: number; lng: number; range: number;
- * @returns Array<HospitalDTOModel> lista de hospitais filtrados por distância
+ * @returns Array<HospitalDTO> lista de hospitais filtrados por distância
  * @throws NotFound caso não encontre hospitais
  */
 async function getFilteredHospitals({
@@ -108,7 +108,7 @@ async function getFilteredHospitals({
   lat: number;
   lng: number;
   range: number;
-}): Promise<PlaceStatus<HospitalDTOModel[]>> {
+}): Promise<PlaceStatus<HospitalDTO[]>> {
   try {
     const hospitalList = await hospitalSchema.aggregate([
       {
@@ -144,7 +144,7 @@ async function getFilteredHospitals({
   } catch (e) {
     return {
       status: StatusCode.notFound,
-      result: [] as HospitalDTOModel[],
+      result: [] as HospitalDTO[],
     };
   }
 }

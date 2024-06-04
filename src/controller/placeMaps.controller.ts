@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { StatusCode } from "@models/types/status.code";
+import { StatusCode } from "@models/types/StatusCode";
 import { getHospitals } from "@services/places.service";
 import { PlaceStatus } from "@models/types/PlaceStatus";
-import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { HospitalDTO } from "@models/types/dto/HospitalDTO";
 import { converterHospitaDtoToModel } from "../models/types/HospitalsModel";
 
 /**
@@ -19,14 +19,13 @@ async function placeSearchHospitalsMapsController(req: Request, res: Response) {
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
 
-  const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
-    await getHospitals({
-      page: 1,
-      limit: 10000,
-      lat: latitude,
-      lng: longitude,
-      range: getRange(range),
-    });
+  const hospitalsList: PlaceStatus<Array<HospitalDTO>> = await getHospitals({
+    page: 1,
+    limit: 10000,
+    lat: latitude,
+    lng: longitude,
+    range: getRange(range),
+  });
 
   switch (hospitalsList.status) {
     case StatusCode.Success: {
