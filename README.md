@@ -9,8 +9,9 @@ Essa serviço foi criado para catalogar os hospitais públicos em Belo Horizonte
 - [Descrição](#descrição)
 - [Instruções de Instalação e Configuração](#instruções-de-instalação-e-configuração)
 - [Endpoints da API](#endpoints-da-api)
-  - [GET - Pegar latitude e longitude a partir do endereço do usuário](#get---pegar-latitude-e-longitude-a-partir-do-endereço-do-usuário)
+  - [GET - Pegar Hospitais proximos ao endereço do usuário](#get---pegar-hospitais-proximos-ao-endereço-do-usuário)
   - [GET - Lista de busca de hospitais pelo nome](#get---lista-de-busca-de-hospitais-pelo-nome)
+  - [GET - Pegar o hospital mais próximo do usuário em emergência](#get---pegar-o-hospital-mais-próximo-do-usuário-em-emergência)
 
 ## Instruções de Instalação e Configuração
 
@@ -194,7 +195,7 @@ curl --location 'http://localhost:3000/place/hospital/search?latitude=-19.837407
 }
 ```
 
-### GET - Pegar o hospital mais próximo do usuário (Casos de emergência)
+### GET - Pegar o hospital mais próximo do usuário em emergência
 
 Esse endpoint serve para pegar o hospital mais próximo dele, usando como uma função de emergência, na qual ao passar
 a latitude e a longitude, sem importar com o range, vai buscar o hospital mais próximo.
