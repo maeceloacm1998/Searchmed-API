@@ -6,6 +6,13 @@ import {
 } from "@/services/places.lastselected.service";
 import { Request, Response } from "express";
 
+/**
+ * Controlador para a rota /place/lastselected/create. Espera os seguintes parâmetros de consulta:
+ * @param userId: String
+ * @param hospitalName: String
+ * @returns HospitalLastSelected
+ * @throws NotFound
+ */
 async function placeLastSelectedCreateController(req: Request, res: Response) {
   const userId = String(req.query.userId);
   const hospitalName = String(req.query.hospitalName);
@@ -33,6 +40,12 @@ async function placeLastSelectedCreateController(req: Request, res: Response) {
   }
 }
 
+/**
+ *  Controlador para a rota /place/lastselected/get. Espera os seguintes parâmetros de consulta:
+ * @param userId: String
+ * @returns Array<HospitalLastSelected>
+ * @throws NotFound
+ */
 async function placeLastSelectedGetController(req: Request, res: Response) {
   const userId = String(req.query.userId);
 
