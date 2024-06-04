@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getHospitals } from "@services/places.service";
-import { StatusCode } from "@models/types/status.code";
-import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { StatusCode } from "@models/types/StatusCode";
+import { HospitalDTO } from "@models/types/dto/HospitalDTO";
 import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
 import { PlaceStatus } from "@/models/types/PlaceStatus";
 
@@ -25,14 +25,13 @@ async function placeSearchHospitalToEmergencyController(
   const longitude = Number(req.query.longitude);
   const range = Number(req.query.range);
 
-  const hospitalsList: PlaceStatus<Array<HospitalDTOModel>> =
-    await getHospitals({
-      page: 1,
-      limit: 10000,
-      lat: latitude,
-      lng: longitude,
-      range: getRange(range),
-    });
+  const hospitalsList: PlaceStatus<Array<HospitalDTO>> = await getHospitals({
+    page: 1,
+    limit: 10000,
+    lat: latitude,
+    lng: longitude,
+    range: getRange(range),
+  });
 
   switch (hospitalsList.status) {
     case StatusCode.Success: {
@@ -76,7 +75,7 @@ function getRange(range: number): number {
  * @returns boolean true se não existir hospital no range
  */
 function notExistHospitalInRange(
-  hospitalsListFilteredPerDistance: Array<HospitalDTOModel>
+  hospitalsListFilteredPerDistance: Array<HospitalDTO>
 ): boolean {
   return hospitalsListFilteredPerDistance.length === 0;
 }

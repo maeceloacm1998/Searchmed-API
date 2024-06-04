@@ -1,4 +1,4 @@
-import { StatusCode } from "@models/types/status.code";
+import { StatusCode } from "@models/types/StatusCode";
 import { converterHospitaDtoToModel } from "@models/types/HospitalsModel";
 import { getFilteredHospitals } from "@services/places.service";
 import { Request, Response } from "express";

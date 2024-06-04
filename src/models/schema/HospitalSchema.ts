@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { HospitalDTOModel } from "@models/types/dto/HospitalDTOModel";
+import { HospitalDTO } from "@models/types/dto/HospitalDTO";
 
-export interface IHospitalSchema extends HospitalDTOModel, Document {}
+export interface IHospitalSchema extends HospitalDTO, Document {}
 
 const ReviewSchema: Schema = new Schema({
   author: { type: String, required: true },

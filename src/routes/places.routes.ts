@@ -9,6 +9,11 @@ import {
   validateLatLng,
   validateSearchHospital,
 } from "@models/validations/validator";
+import {
+  placeLastSelectedCreateController,
+  placeLastSelectedGetController,
+} from "@/controller/place.last.selected.controller";
+import { validateHospitalLastSelected } from "../models/validations/validator";
 
 function placeAutoCompleteRoute(route: Router) {
   /**
@@ -118,6 +123,56 @@ function placesRoute(route: Router) {
   route
     .route("/place/hospital/search")
     .get(validateSearchHospital, placeSearchHospitalController);
+
+  /**
+   * Essa chamada serve para salvar o hospital selecionado pelo usuário.
+   * @params userId: String
+   * @params hospitalName: String
+   * @returns PlaceLastSelected | NotFound
+   * @throws NotFound
+   * @throws BadRequest
+   *
+   * Exemplo de uso:
+   * /place/hospital/lastselected/create?userId=123&hospitalName=Santa Casa
+   *
+   * Exemplo de resposta:
+   * {
+   * "status": 200,
+   * "result": {
+   * "userId": "123",
+   * "hospitalName": "Santa Casa",
+   * "createdAt": "2021-08-10T00:00:00.000Z"
+   * }
+   * }
+   */
+  route
+    .route("/place/hospital/lastselected/create")
+    .post(validateHospitalLastSelected, placeLastSelectedCreateController);
+
+  /**
+   * Essa chamada serve para retornar todos os hospitais selecionados pelo usuário.
+   * @params userId: String
+   * @returns Array<PlaceLastSelected> | NotFound | BadRequest
+   * @throws NotFound
+   *
+   * Exemplo de uso:
+   * /place/hospital/lastselected?userId=123
+   *
+   * Exemplo de resposta:
+   * {
+   * "status": 200,
+   * "result": [
+   * {
+   * "userId": "123",
+   * "hospitalName": "Santa Casa",
+   * "createdAt": "2021-08-10T00:00:00.000Z"
+   * }
+   * ]
+   * }
+   */
+  route
+    .route("/place/hospital/lastselected")
+    .get(validateHospitalLastSelected, placeLastSelectedGetController);
 }
 
 export { placeAutoCompleteRoute, placesRoute };

@@ -1,6 +1,6 @@
 import { AddressType } from "@googlemaps/google-maps-services-js";
 
-export interface HospitalDTOModel {
+export interface HospitalDTO {
   place_id: string;
   address: string;
   name: string;

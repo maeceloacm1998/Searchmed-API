@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StatusCode } from "@models/types/status.code";
+import { StatusCode } from "@models/types/StatusCode";
 import { placeAutoComplete } from "@services/places.service";
 
 async function placeAutoCompleteController(req: Request, res: Response) {
